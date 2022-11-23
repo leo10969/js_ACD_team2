@@ -1,4 +1,8 @@
 <html>
+    <head>
+        <meta charset="utf-8"/>
+    </head>
+    <script src="arrow.js"></script>
     <body>
         <div id="container"></div>
         <script type="text/javascript">
@@ -20,57 +24,106 @@
         node2.y = 100;
         node2.name = "Node2";
 
-        function Node() {
-           var me = this;
-         
-           this.x = 0;
-           this.y = 0;
-           this.isDragged = false;
-           this.name = "None";
-           this.draw = function(ctx) {
+        // link from node1 to node2
+        var link1 = new Link(node1, node2);
+        link1.set_label("link1");
 
-               ctx.fillStyle = "gray";
-               ctx.strokeStyle = "black";
-               ctx.beginPath();
-               ctx.arc(me.x, me.y, 50, 0, 2 * Math.PI, true);
-               ctx.fill();
-               ctx.stroke();
-               ctx.closePath();
-               ctx.beginPath();
-               ctx.fillStyle = "red";
-               ctx.textBaseline = "middle";
-               ctx.fillText(this.name, this.x-ctx.measureText(this.name).width/2, this.y);
-               ctx.fill();
-               
-           };
+        // link from node2 to node1
+        var link2 = new Link(node2, node1);
+        link2.set_label("link2");
+
+        function Link(from_node, to_node) {
+            this.from_node = from_node;
+            this.to_node = to_node;
+            this.theta = Math.atan2((this.to_node.y - this.from_node.y), (this.to_node.x - this.from_node.x))
+            this.label = "";
+            this.arrow = new arrow(
+                        this.from_node.x + this.from_node.r * Math.cos(this.theta), 
+                        this.from_node.y + this.from_node.r * Math.sin(this.theta), 
+                        this.to_node.x - this.to_node.r * Math.cos(this.theta), 
+                        this.to_node.y - this.to_node.r * Math.sin(this.theta), 
+                        [0, 5, -20, 5, -20, 15]
+            );
+
+            this.set_label = function(label) {
+                this.label = label;
+                this.arrow.label = label;
+            }
+
+            this.draw = function(ctx) {
+                this.theta = Math.atan2((this.to_node.y - this.from_node.y), (this.to_node.x - this.from_node.x));
+                this.arrow.update(
+                        this.from_node.x + this.from_node.r * Math.cos(this.theta), 
+                        this.from_node.y + this.from_node.r * Math.sin(this.theta), 
+                        this.to_node.x - this.to_node.r * Math.cos(this.theta), 
+                        this.to_node.y - this.to_node.r * Math.sin(this.theta), 
+                        [0, 5, -20, 5, -20, 15]
+                );
+                this.arrow.draw(ctx);
+            }
+        }
+
+        function Node() {
+            var me = this;
          
-           window.addEventListener("mousedown", function(e) {
-               var dx = me.x - e.layerX;
-               var dy = me.y - e.layerY;
-               me.isDragged = Math.sqrt(dx * dx + dy * dy) < 50;
-           });
+            this.x = 0;
+            this.y = 0;
+            this.r = 50;
+            this.isDragged = false;
+            this.name = "None";
+            this.draw = function(ctx) {
+
+                ctx.fillStyle = "gray";
+                ctx.strokeStyle = "black";
+                ctx.beginPath();
+                ctx.arc(me.x, me.y, me.r, 0, 2 * Math.PI, true);
+                ctx.fill();
+                ctx.stroke();
+                ctx.closePath();
+                ctx.beginPath();
+                ctx.fillStyle = "red";
+                ctx.textBaseline = "middle";
+                ctx.fillText(this.name, this.x-ctx.measureText(this.name).width/2, this.y);
+                ctx.fill();
+            };
          
-           window.addEventListener("mousemove", function(e) {
-               if (me.isDragged) {
-                   me.x = e.layerX;
-                   me.y = e.layerY;
-               }
-           });
+            window.addEventListener("mousedown", function(e) {
+                var dx = me.x - e.layerX;
+                var dy = me.y - e.layerY;
+                me.isDragged = Math.sqrt(dx * dx + dy * dy) < me.r;
+            });
          
-           window.addEventListener("mouseup", function(e) {
-               me.isDragged = false;
-           });
+            window.addEventListener("mousemove", function(e) {
+                if (me.isDragged) {
+                    me.x = e.layerX;
+                    me.y = e.layerY;
+                }
+            });
+         
+            window.addEventListener("mouseup", function(e) {
+                me.isDragged = false;
+            });
         }
 
         function render() {
-           ctx.clearRect(0, 0, 500, 500);
-           ctx.strokeStyle = "gray";
-           ctx.beginPath();
-           ctx.moveTo(node1.x,node1.y);
-           ctx.lineTo(node2.x, node2.y);
-           ctx.stroke();
-           node1.draw(ctx);
-           node2.draw(ctx);
+            ctx.clearRect(0, 0, 500, 500);
+            ctx.strokeStyle = "gray";
+
+            // Draw link1
+            ctx.save();
+            ctx.translate(15*Math.cos(link1.theta + Math.PI/2), 15*Math.sin(link1.theta + Math.PI/2));
+            link1.draw(ctx);
+            ctx.restore();
+
+            // Draw link2
+            ctx.save();
+            ctx.translate(15*Math.cos(link2.theta + Math.PI/2), 15*Math.sin(link2.theta + Math.PI/2));
+            link2.draw(ctx);
+            ctx.restore();
+
+            // Draw nodes
+            node1.draw(ctx);
+            node2.draw(ctx);
         }
          
         setInterval(render, 30);
