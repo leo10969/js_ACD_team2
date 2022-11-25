@@ -4,6 +4,18 @@
     </head>
     <script src="arrow.js"></script>
     <body>
+        <div id="add_node">
+            ノード名<input type="text" id="node_name" value=""></input>
+            <input type="button" value="追加" onclick="var node = new Node(); node.x = 50; node.y = 50; node.name = document.getElementById('node_name').value; nodes.push(node);"></input>
+        </div>
+
+        <div id="add_link">
+            リンク名<input type="text" id="link_name" value=""></input>
+            from <input type="text" id="from_node"></input>
+            to <input type="text" id="to_node"></input>
+            <input type="button" value="追加" onclick=""></input>
+        </div>
+
         <div id="container"></div>
         <script type="text/javascript">
         var cvs = document.createElement("canvas");
@@ -13,16 +25,19 @@
   
         var ctx = cvs.getContext("2d");
         
-        
+        // Node1 and Node2
+        var nodes = [];
         var node1 = new Node();
         node1.x = 100;
         node1.y = 100;
         node1.name = "Node1";
+        nodes.push(node1);
 
         var node2 = new Node();
         node2.x = 300;
         node2.y = 100;
         node2.name = "Node2";
+        nodes.push(node2);
 
         // link from node1 to node2
         var link1 = new Link(node1, node2);
@@ -122,8 +137,9 @@
             ctx.restore();
 
             // Draw nodes
-            node1.draw(ctx);
-            node2.draw(ctx);
+            for (var i = 0; i < nodes.length; i++) {
+                nodes[i].draw(ctx);
+            }
         }
          
         setInterval(render, 30);

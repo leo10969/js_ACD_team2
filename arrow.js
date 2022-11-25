@@ -1,28 +1,15 @@
 function arrow(startX, startY, endX, endY, controlPoints){
-    this.startX = startX;
-    this.startY = startY;
-    this.endX = endX;
-    this.endY = endY;
-    var dx = this.endX - this.startX;
-    var dy = this.endY - this.startY;
-    var len = Math.sqrt(dx * dx + dy * dy);
-    var sin = dy / len;
-    var cos = dx / len;
+    this.startX;
+    this.startY;
+    this.endX;
+    this.endY;
+    var dx;
+    var dy;
+    var len;
+    var sin;
+    var cos;
     var label = "";
     var a = [];
-    a.push(0, 0);
-    for (var i = 0; i < controlPoints.length; i += 2) {
-        var x = controlPoints[i];
-        var y = controlPoints[i + 1];
-        a.push(x < 0 ? len + x : x, y);
-    }
-    a.push(len, 0);
-    for (var i = controlPoints.length; i > 0; i -= 2) {
-        var x = controlPoints[i - 2];
-        var y = controlPoints[i - 1];
-        a.push(x < 0 ? len + x : x, -y);
-    }
-    a.push(0, 0);
 
     this.update = function(startX, startY, endX, endY, controlPoints){
         this.startX = startX;
@@ -49,6 +36,9 @@ function arrow(startX, startY, endX, endY, controlPoints){
         }
         a.push(0, 0);
     }
+
+    // Initialized
+    this.update(startX, startY, endX, endY, controlPoints);
 
     this.draw = function(ctx){
         ctx.save();
