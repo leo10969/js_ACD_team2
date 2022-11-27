@@ -44,7 +44,7 @@ function arrow(startX, startY, endX, endY, controlPoints){
         ctx.save();
         // Draw the arrow.
         ctx.beginPath();
-        ctx.fillStyle = "rgba(150, 150, 150, 0.7)";
+        ctx.fillStyle = "gray";
         for (var i = 0; i < a.length; i += 2) {
             var x = a[i] * cos - a[i + 1] * sin + this.startX;
             var y = a[i] * sin + a[i + 1] * cos + this.startY;
