@@ -5,12 +5,16 @@
     <script src="arrow.js"></script>
     <body>
         <div id="add_node">
-            ノード名<input type="text" id="node_name" value=""></input>
-            <input type="button" value="追加" onclick="addNode(document.getElementById('node_name').value);"></input>
+            <p>Node</p>
+            name<input type="text" id="node_name" value=""></input>
+            group<input type="text" id="group" value=""></input>
+            rank<input type="text" id="rank" value=""></input>
+            <input type="button" value="追加" onclick="addNode(document.getElementById('node_name').value, document.getElementById('group').value, document.getElementById('rank').value);"></input>
         </div>
 
         <div id="add_link">
-            リンク名<input type="text" id="link_name" value=""></input>
+            <p>Link</p>
+            label<input type="text" id="link_name" value=""></input>
             from <input type="text" id="from_node" value=""></input>
             to <input type="text" id="to_node" value=""></input>
             <input type="button" value="追加" onclick="addLink(document.getElementById('link_name').value, document.getElementById('from_node').value, document.getElementById('to_node').value);"></input>
@@ -25,36 +29,15 @@
   
         var ctx = cvs.getContext("2d");
         
-        // Node1 and Node2
-        var nodes = {};
         var links = {};
-        var node1 = new Node();
-        node1.x = 100;
-        node1.y = 100;
-        node1.name = "Node1";
-        nodes[node1.name] = node1;
-        links[node1.name] = {};
-
-        var node2 = new Node();
-        node2.x = 300;
-        node2.y = 100;
-        node2.name = "Node2";
-        nodes[node2.name] = node2;
-        links[node2.name] = {};
-
-        // link from node1 to node2
-        var link1 = new Link(node1, node2);
-        link1.set_label("link1");
-        links[node1.name][node2.name] = link1;
-
-        // link from node2 to node1
-        var link2 = new Link(node2, node1);
-        link2.set_label("link2");
-        links[node2.name][node1.name] = link2;
-
-        function addNode(node_name) {
+        var nodes = {};
+        
+        // Functions
+        function addNode(node_name, group, rank) {
             var node = new Node();
             node.name = node_name;
+            node.group = group;
+            node.r = 50*(10-rank+1)/10;
             node.x = 500*Math.random();
             node.y = 500*Math.random();
             nodes[node_name] = node;
@@ -67,6 +50,22 @@
             links[from_node_name][to_node_name] = link;
         }
 
+        function drawLinks(ctx) {
+            for (var n1 in links) {
+                for (var n2 in links[n1]) {
+                    if(n1 in links[n2] && links[n1][n2].label != links[n2][n1].label) {
+                        ctx.save();
+                        ctx.translate(15*Math.cos(links[n1][n2].theta + Math.PI/2), 15*Math.sin(links[n1][n2].theta + Math.PI/2));
+                        links[n1][n2].draw(ctx);
+                        ctx.restore();
+                    } else {
+                        links[n1][n2].draw(ctx);
+                    }
+                }
+            }
+        }
+
+        // Class
         function Link(from_node, to_node) {
             this.from_node = from_node;
             this.to_node = to_node;
@@ -77,7 +76,7 @@
                         this.from_node.y + this.from_node.r * Math.sin(this.theta), 
                         this.to_node.x - this.to_node.r * Math.cos(this.theta), 
                         this.to_node.y - this.to_node.r * Math.sin(this.theta), 
-                        [0, 5, -20, 5, -20, 15]
+                        [0, 1, -20, 1, -20, 15]
             );
 
             this.set_label = function(label) {
@@ -92,7 +91,7 @@
                         this.from_node.y + this.from_node.r * Math.sin(this.theta), 
                         this.to_node.x - this.to_node.r * Math.cos(this.theta), 
                         this.to_node.y - this.to_node.r * Math.sin(this.theta), 
-                        [0, 5, -20, 5, -20, 15]
+                        [0, 1, -20, 1, -20, 15]
                 );
                 this.arrow.draw(ctx);
             }
@@ -105,7 +104,7 @@
             this.y = 0;
             this.r = 50;
             this.isDragged = false;
-            this.name = "None";
+            this.name = "";
             this.draw = function(ctx) {
 
                 ctx.fillStyle = "gray";
@@ -116,26 +115,26 @@
                 ctx.stroke();
                 ctx.closePath();
                 ctx.beginPath();
-                ctx.fillStyle = "red";
+                ctx.fillStyle = "white";
                 ctx.textBaseline = "middle";
                 ctx.fillText(this.name, this.x-ctx.measureText(this.name).width/2, this.y);
                 ctx.fill();
             };
 
-            window.addEventListener("mousedown", function(e) {
-                var dx = me.x - e.layerX;
-                var dy = me.y - e.layerY;
+            cvs.addEventListener("mousedown", function(e) {
+                var dx = me.x - (e.clientX - cvs.getBoundingClientRect().left);
+                var dy = me.y - (e.clientY - cvs.getBoundingClientRect().top);
                 me.isDragged = Math.sqrt(dx * dx + dy * dy) < me.r;
             });
          
-            window.addEventListener("mousemove", function(e) {
+            cvs.addEventListener("mousemove", function(e) {
                 if (me.isDragged) {
-                    me.x = e.layerX;
-                    me.y = e.layerY;
+                    me.x = e.clientX - cvs.getBoundingClientRect().left;
+                    me.y = e.clientY - cvs.getBoundingClientRect().top;
                 }
             });
          
-            window.addEventListener("mouseup", function(e) {
+            cvs.addEventListener("mouseup", function(e) {
                 me.isDragged = false;
             });
         }
@@ -144,25 +143,8 @@
             ctx.clearRect(0, 0, 500, 500);
             ctx.strokeStyle = "gray";
 
-            // Draw link1
-            ctx.save();
-            ctx.translate(15*Math.cos(link1.theta + Math.PI/2), 15*Math.sin(link1.theta + Math.PI/2));
-            link1.draw(ctx);
-            ctx.restore();
-
-            // Draw link2
-            ctx.save();
-            ctx.translate(15*Math.cos(link2.theta + Math.PI/2), 15*Math.sin(link2.theta + Math.PI/2));
-            link2.draw(ctx);
-            ctx.restore();
-
-            for (var n1 in links) {
-                for (var n2 in links[n1]) {
-                    if (links[n1][n2].label != "link1" && links[n1][n2].label != "link2") {
-                        links[n1][n2].draw(ctx);
-                    }
-                }
-            }
+            // Draw links
+            drawLinks(ctx);
 
             // Draw nodes
             for (var name in nodes) {
