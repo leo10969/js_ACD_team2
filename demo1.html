@@ -37,7 +37,6 @@
             var node = new Node();
             node.name = node_name;
             node.group = group;
-            node.r = 50*(10-rank+1)/10;
             node.x = 500*Math.random();
             node.y = 500*Math.random();
             nodes[node_name] = node;
@@ -48,6 +47,10 @@
             var link = new Link(nodes[from_node_name], nodes[to_node_name]);
             link.set_label(link_name);
             links[from_node_name][to_node_name] = link;
+        }
+
+        function distance(node1, node2) {
+            return Math.sqrt((node1.x - node2.x)**2 - (node1.y - node2.y)**2);
         }
 
         function drawLinks(ctx) {
@@ -71,6 +74,7 @@
             this.to_node = to_node;
             this.theta = Math.atan2((this.to_node.y - this.from_node.y), (this.to_node.x - this.from_node.x));
             this.label = "";
+            this.bidirection = false;
             this.arrow = new arrow(
                         this.from_node.x + this.from_node.r * Math.cos(this.theta), 
                         this.from_node.y + this.from_node.r * Math.sin(this.theta), 
