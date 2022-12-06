@@ -49,8 +49,27 @@
             links[from_node_name][to_node_name] = link;
         }
 
-        function distance(node1, node2) {
-            return Math.sqrt((node1.x - node2.x)**2 - (node1.y - node2.y)**2);
+        function calcForce() {
+            var k = 0.001; // ばね定数
+            var stableDistance = 220; // ばねの自然長
+            var nodeList = Object.values(nodes); // Nodeオブジェクトの配列
+            for (var i = 0; i < nodeList.length; i++) {
+                var node1 = nodeList[i];
+                for (var j = i+1; j < nodeList.length; j++) {
+                    var node2 = nodeList[j];
+                    var dx = node1.x - node2.x;
+                    var dy = node1.y - node2.y;
+                    var d = Math.sqrt(dx*dx + dy*dy);
+                    if(node1.name in links[node2.name] || node2.name in links[node1.name]) {
+                        // ばねの計算
+                        f = k * (stableDistance - d);
+                        node1.x += dx * f;
+                        node1.y += dy * f;
+                    } else {
+                        // 斥力・引力の計算
+                    }
+                }
+            }
         }
 
         function drawLinks(ctx) {
@@ -146,6 +165,9 @@
         function render() {
             ctx.clearRect(0, 0, 500, 500);
             ctx.strokeStyle = "gray";
+
+            // Calculate force
+            calcForce();
 
             // Draw links
             drawLinks(ctx);
