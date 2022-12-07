@@ -65,6 +65,8 @@
                         f = k * (stableDistance - d);
                         node1.x += dx * f;
                         node1.y += dy * f;
+                        node2.x -= dx * f;
+                        node2.y -= dy * f;
                     } else {
                         // 斥力・引力の計算
                     }
@@ -167,7 +169,7 @@
             ctx.strokeStyle = "gray";
 
             // Calculate force
-            
+            calcForce();
 
             // Draw links
             drawLinks(ctx);
