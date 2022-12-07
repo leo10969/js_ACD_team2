@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-18">
+        <title>arrow</title>
+    </head>
+    <body>
+        <div id="container"></div>
+        <script type="text/javascript">
+            var cvs = document.createElement("canvas");
+            cvs.width = 500;
+            cvs.height = 500;
+            document.getElementById('container').appendChild(cvs);
+
+            var ctx = cvs.getContext("2d");
+
+            function arrow(startX, startY, endX, endY, controlPoints){
+                var dx = endX - startX;
+                var dy = endY - startY;
+                var len = Math.sqrt(dx * dx + dy * dy);
+                var sin = dy / len;
+                var cos = dx / len;
+                var a = [];
+                a.push(0, 0);
+                for (var i = 0; i < controlPoints.length; i += 2) {
+                    var x = controlPoints[i];
+                    var y = controlPoints[i + 1];
+                    a.push(x < 0 ? len + x : x, y);
+                }
+                a.push(len, 0);
+                for (var i = controlPoints.length; i > 0; i -= 2) {
+                    var x = controlPoints[i - 2];
+                    var y = controlPoints[i - 1];
+                    a.push(x < 0 ? len + x : x, -y);
+                }
+                a.push(0, 0);
+                this.draw = function(ctx){
+                    for (var i = 0; i < a.length; i += 2) {
+                        var x = a[i] * cos - a[i + 1] * sin + startX;
+                        var y = a[i] * sin + a[i + 1] * cos + startY;
+                        if (i === 0) ctx.moveTo(x, y);
+                        else ctx.lineTo(x, y);
+                    }
+                }
+            }
+
+            ctx.fillStyle = "blue";
+            ctx.beginPath();
+            var arrow1 = new arrow(0, 0, 200, 200, [0, 5, -20, 5, -20, 15]);
+            arrow1.draw(ctx);
+            ctx.fill();
+
+
+        </script>
+    </body>
+</html>
