@@ -62,7 +62,7 @@
                     var d = Math.sqrt(dx*dx + dy*dy);
                     if(node1.name in links[node2.name] || node2.name in links[node1.name]) {
                         // ばねの計算
-                        f = k * (stableDistance - d);
+                        var f = k * (stableDistance - d);
                         node1.x += dx * f;
                         node1.y += dy * f;
                         node2.x -= dx * f;
