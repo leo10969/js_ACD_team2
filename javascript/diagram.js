@@ -1,17 +1,20 @@
 import {arrow} from "./arrow.js";
+import {makecanvas} from "./canvas.js";
 
-var cvs = document.createElement("canvas");
-cvs.width = 1000;
-cvs.height = 1000;
-document.getElementById('containerA').appendChild(cvs);
+var cvslist = [];
+var ctxlist = [];
+for (var i=0; i <3; i++){
+    var ret = makecanvas(i.toString());
+    cvslist.push(ret[0]);
+    ctxlist.push(ret[1]);
+}
 
-var ctx = cvs.getContext("2d");
 
 var links = {};
 var nodes = {};
 
 // Functions
-function addNode(node_name, group, rank) {
+function addNode(node_name, group, rank, cvs) {
     var node = new Node();
     node.name = node_name;
     node.group = group;
@@ -19,8 +22,10 @@ function addNode(node_name, group, rank) {
     node.x = 500*Math.random()+150;
     node.y = 500*Math.random()+150;
     node.r = 50+(5*node.rank);
+    node.cvs = cvs;
     nodes[node_name] = node;
     links[node_name] = {};
+    
 }
 
 function addLink(link_name, from_node_name, to_node_name, isBidirectional) {
@@ -35,15 +40,15 @@ function addLink(link_name, from_node_name, to_node_name, isBidirectional) {
 
 //Nodeの引力を計算する
 function calcAttractiveForce(node1, node2) {
-   var v = 5; //移動量
-   var dx = (node1.x - node2.x);
-   var dy = (node1.y - node2.y);
-   var distance = Math.sqrt(dx * dx + dy * dy) / 10000;
-   node2.x += dx * distance;
-   node2.y += dy * distance;
+    var v = 5; //移動量
+    var dx = (node1.x - node2.x);
+    var dy = (node1.y - node2.y);
+    var distance = Math.sqrt(dx * dx + dy * dy) / 10000;
+    node2.x += dx * distance;
+    node2.y += dy * distance;
 }
- 
- 
+    
+    
 //Node同士の斥力分だけ移動させる
 function calcRepulsiveForce(node1, node2) {   
     var dx = node1.x - node2.x;
@@ -152,7 +157,7 @@ function Link(from_node, to_node) {
 
 function Node() {
     var me = this;
-
+    
     this.isDragged = false;
     this.name = "";
     this.rank = 1;
@@ -160,7 +165,8 @@ function Node() {
     this.x = 0;
     this.y = 0;
     this.r = 50;
-
+    this.cvs = cvslist[0];
+    console.log(this.cvs);
     this.draw = function(ctx) {
 
         ctx.fillStyle = "gray";
@@ -176,20 +182,20 @@ function Node() {
         ctx.fillText(this.name, this.x-ctx.measureText(this.name).width/2, this.y);
         ctx.fill();
     };
-
-    cvs.addEventListener("mousedown", function(e) {
+    
+    this.cvs.addEventListener("mousedown", function(e) {
         var dx = me.x - (e.clientX - cvs.getBoundingClientRect().left);
         var dy = me.y - (e.clientY - cvs.getBoundingClientRect().top);
         me.isDragged = Math.sqrt(dx * dx + dy * dy) < me.r;
     });
- 
+    
     cvs.addEventListener("mousemove", function(e) {
         if (me.isDragged) {
             me.x = e.clientX - cvs.getBoundingClientRect().left;
             me.y = e.clientY - cvs.getBoundingClientRect().top;
         }
     });
- 
+    
     cvs.addEventListener("mouseup", function(e) {
         me.isDragged = false;
     });
@@ -200,7 +206,7 @@ var namelist = ["青羽紬", "佐倉想", "戸川湊斗", "桃野奈々", "春�
 var grouplist = [["高校同窓生","青羽家"], ["高校同窓生", "佐倉家"], ["高校同窓生"], [],[],["青羽家"], ["佐倉家"], ["佐倉家"]];
 var ranklist = [5,5,3,3,3,1,1,1];
 for (var i =0; i < namelist.length; i++){
-    addNode(namelist[i], grouplist[i], ranklist[i]);
+    addNode(namelist[i], grouplist[i], ranklist[i], cvslist[0]);
 }
 var linknamelists = [["弟", "元恋人", "交際中", "手話の先生"], ["元恋人", "母", "妹","交際中？"],["交際中"],["交際中？"], ["心配"]];
 var linkfromlists = ["青羽紬", "佐倉想", "戸川湊斗", "桃野奈々","佐倉律子"];
@@ -221,7 +227,7 @@ nodes["青羽光"].x = 300; nodes["青羽光"].y = 600;
 nodes["佐倉萌"].x = 600; nodes["佐倉萌"].y = 600;
 nodes["佐倉律子"].x = 700; nodes["佐倉律子"].y = 550;
 
-function render() {
+function render(ctx) {
     ctx.clearRect(0, 0, 1000, 1000);
     ctx.strokeStyle = "gray";
 
@@ -236,5 +242,7 @@ function render() {
         nodes[name].draw(ctx);
     }
 }
- 
-setInterval(render, 30);
+
+for (var i = 0; i < 3; i++){
+    setInterval(render, 30, ctxlist[i]);  
+}

@@ -1,4 +1,4 @@
-function arrow(startX, startY, endX, endY, controlPoints){
+export function arrow(startX, startY, endX, endY, controlPoints){
     this.startX;
     this.startY;
     this.endX;
