@@ -3,15 +3,15 @@ tab-group{
     justify-content: center;
 }
 .tab{
-    flex-grow: 1;
-    padding:5px;
+    flex-grow: 1; /*縦幅*/
+    padding:5px; /*縦幅*/
     list-style:none;
-    border:solid 1px #CCC;
-    text-align:center;
+    border:solid 1px rgb(255, 255, 255);
+    text-align:center; /*テキスト位置*/
     cursor:pointer;
 }
 .panel-group{
-    height:100px;
+    height:200px;
     border:solid 1px #CCC;
     border-top:none;
     background:#eee;
