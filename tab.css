@@ -1,8 +1,9 @@
-tab-group{
+.tab-group{
     display: flex;
-    justify-content: center;
+    justify-content: left;
 }
 .tab{
+    max-width: 100;
     flex-grow: 1; /*縦幅*/
     padding:5px; /*縦幅*/
     list-style:none;
