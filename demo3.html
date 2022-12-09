@@ -37,8 +37,10 @@
             var node = new Node();
             node.name = node_name;
             node.group = group;
-            node.x = 500*Math.random()+300;
-            node.y = 500*Math.random()+300;
+            node.rank = rank;
+            node.x = 500*Math.random()+150;
+            node.y = 500*Math.random()+150;
+            node.r = 50+(5*node.rank);
             nodes[node_name] = node;
             links[node_name] = {};
         }
@@ -113,7 +115,6 @@
             }
         }
 
-        
 
         // Class
         function Link(from_node, to_node) {
@@ -150,14 +151,14 @@
 
         function Node() {
             var me = this;
-         
-            this.x = 0;
-            this.y = 0;
-            this.r = 50;
+
             this.isDragged = false;
             this.name = "";
             this.rank = 1;
             this.group = [];
+            this.x = 0;
+            this.y = 0;
+            this.r = 50;
 
             this.draw = function(ctx) {
 
@@ -192,9 +193,11 @@
                 me.isDragged = false;
             });
         }
-        var namelist = ["青羽紬", "佐倉想", "戸川湊斗", "桃野奈々", "春尾正輝", "青羽光", "佐倉萌","佐倉律子"];
+
+        //入力例
+        var namelist = ["青羽紬", "佐倉想", "戸川湊斗", "桃野奈々", "春尾正輝", "青羽光", "佐倉萌", "佐倉律子"];
         var grouplist = [["高校同窓生","青羽家"], ["高校同窓生", "佐倉家"], ["高校同窓生"], [],[],["青羽家"], ["佐倉家"], ["佐倉家"]];
-        var ranklist = [5,5,4,4,4,3,3,3];
+        var ranklist = [5,5,3,3,3,1,1,1];
         for (var i =0; i < namelist.length; i++){
             addNode(namelist[i], grouplist[i], ranklist[i]);
         }
@@ -207,6 +210,15 @@
                 addLink(linknamelists[j][k],linkfromlists[j],linktolists[j][k],linkdirectionlists[j][k]);
             }
         }
+        //作業効率化のため入力例を相関図ぽく配置する
+        nodes["青羽紬"].x = 300; nodes["青羽紬"].y = 250;
+        nodes["佐倉想"].x = 600; nodes["佐倉想"].y = 250;
+        nodes["戸川湊斗"].x = 150; nodes["戸川湊斗"].y = 250;
+        nodes["桃野奈々"].x = 600; nodes["桃野奈々"].y = 50;
+        nodes["春尾正輝"].x = 300; nodes["春尾正輝"].y = 50;
+        nodes["青羽光"].x = 300; nodes["青羽光"].y = 600;
+        nodes["佐倉萌"].x = 600; nodes["佐倉萌"].y = 600;
+        nodes["佐倉律子"].x = 700; nodes["佐倉律子"].y = 550;
 
         function render() {
             ctx.clearRect(0, 0, 1000, 1000);
