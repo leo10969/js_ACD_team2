@@ -15,22 +15,15 @@ var nodes = {};
 
 // Functions
 function addNode(node_name, group, rank, cvs) {
-    var node = new Node();
-    node.name = node_name;
-    node.group = group;
-    node.rank = rank;
-    node.x = 500*Math.random()+150;
-    node.y = 500*Math.random()+150;
-    node.r = 50+(5*node.rank);
+    var node = new Node(node_name, group, rank);
     node.cvs = cvs;
     nodes[node_name] = node;
     links[node_name] = {};
-    
 }
 
 function addLink(link_name, from_node_name, to_node_name, isBidirectional) {
     var link = new Link(nodes[from_node_name], nodes[to_node_name]);
-    link.set_label(link_name);
+    link.label = link_name;
     link.isBidirectional = isBidirectional;
     links[from_node_name][to_node_name] = link;
     if (isBidirectional) {
@@ -116,63 +109,57 @@ function drawLinks(ctx) {
 }
 
 // Class
-function Link(from_node, to_node) {
-    this.from_node = from_node;
-    this.to_node = to_node;
-    this.theta = Math.atan2((this.to_node.y - this.from_node.y), (this.to_node.x - this.from_node.x));
-    this.label = "";
-    this.isBidirectional = false;
-    this.arrow = new arrow(
-                this.from_node.x + this.from_node.r * Math.cos(this.theta), 
-                this.from_node.y + this.from_node.r * Math.sin(this.theta), 
-                this.to_node.x - this.to_node.r * Math.cos(this.theta), 
-                this.to_node.y - this.to_node.r * Math.sin(this.theta), 
-                [0, 1, -20, 1, -20, 15]
-    );
-
-    this.set_label = function(label) {
-        this.label = label;
-        this.arrow.label = label;
-    };
-
-    this.draw = function(ctx) {
-        this.theta = Math.atan2((this.to_node.y - this.from_node.y), (this.to_node.x - this.from_node.x));
-        var controlPoints = [];
-        if (this.isBidirectional) {
-            controlPoints = [0, 1, -1, 1, -1, 1];
-        } else {
-            controlPoints = [0, 1, -20, 1, -20, 15];
-        }
-
-        this.arrow.update(
-                this.from_node.x + this.from_node.r * Math.cos(this.theta), 
-                this.from_node.y + this.from_node.r * Math.sin(this.theta), 
-                this.to_node.x - this.to_node.r * Math.cos(this.theta), 
-                this.to_node.y - this.to_node.r * Math.sin(this.theta), 
-                controlPoints
-        );
-        this.arrow.draw(ctx);
+class Node {
+    // properties
+    name = "";
+    group = [];
+    rank = 1;
+    x = 0;
+    y = 0;
+    r = 50;
+    #cvs;
+    #isDragged = false;
+    // methods
+    constructor(name, group=[], rank=1) {
+        this.name = name
+        this.group = group;
+        this.rank = rank;
+        this.x = 500*Math.random() + 150;
+        this.y = 500*Math.random() + 150;
+        this.r = 50+(5*this.rank);
     }
-}
 
-function Node() {
-    var me = this;
-    
-    this.isDragged = false;
-    this.name = "";
-    this.rank = 1;
-    this.group = [];
-    this.x = 0;
-    this.y = 0;
-    this.r = 50;
-    this.cvs = cvslist[0];
-    console.log(this.cvs);
-    this.draw = function(ctx) {
+    get cvs() {
+        return this.#cvs;
+    }
 
+    set cvs(cvs) {
+        // addEventListenerに追加する関数内でthisを使うとfunctionのほうを参照するのでsetter関数内で使えるselfを用意
+        var self = this; 
+        self.#cvs = cvs;
+        cvs.addEventListener("mousedown", function(e) {
+            var dx = self.x - (e.clientX - cvs.getBoundingClientRect().left);
+            var dy = self.y - (e.clientY - cvs.getBoundingClientRect().top);
+            self.#isDragged = Math.sqrt(dx * dx + dy * dy) < self.r;
+        });
+
+        cvs.addEventListener("mousemove", function(e) {
+            if (self.#isDragged) {
+                self.x = e.clientX - cvs.getBoundingClientRect().left;
+                self.y = e.clientY - cvs.getBoundingClientRect().top;
+            }
+        });
+
+        cvs.addEventListener("mouseup", function() {
+            self.#isDragged = false;
+        });
+    }
+
+    draw(ctx) {
         ctx.fillStyle = "gray";
         ctx.strokeStyle = "black";
         ctx.beginPath();
-        ctx.arc(me.x, me.y, me.r, 0, 2 * Math.PI, true);
+        ctx.arc(this.x, this.y, this.r, 0, 2 * Math.PI, true);
         ctx.fill();
         ctx.stroke();
         ctx.closePath();
@@ -182,24 +169,50 @@ function Node() {
         ctx.fillText(this.name, this.x-ctx.measureText(this.name).width/2, this.y);
         ctx.fill();
     };
-    
-    this.cvs.addEventListener("mousedown", function(e) {
-        var dx = me.x - (e.clientX - cvs.getBoundingClientRect().left);
-        var dy = me.y - (e.clientY - cvs.getBoundingClientRect().top);
-        me.isDragged = Math.sqrt(dx * dx + dy * dy) < me.r;
-    });
-    
-    cvs.addEventListener("mousemove", function(e) {
-        if (me.isDragged) {
-            me.x = e.clientX - cvs.getBoundingClientRect().left;
-            me.y = e.clientY - cvs.getBoundingClientRect().top;
-        }
-    });
-    
-    cvs.addEventListener("mouseup", function(e) {
-        me.isDragged = false;
-    });
 }
+
+class Link {
+    #arrow = new arrow(0, 0, 0, 0, [0, 0, 0, 0, 0, 0]);
+    #label = "";
+    isBidirectional = false;
+    constructor(from_node, to_node) {
+        this.from_node = from_node;
+        this.to_node = to_node;
+    }
+
+    get theta() {
+        return Math.atan2((this.to_node.y - this.from_node.y), (this.to_node.x - this.from_node.x));
+    }
+    
+    get label() {
+        return this.#label;
+    }
+
+    set label(label) {
+        this.#label = label;
+        this.#arrow.label = label;
+    }
+
+    draw(ctx) {
+        var theta = Math.atan2((this.to_node.y - this.from_node.y), (this.to_node.x - this.from_node.x));
+        var controlPoints = [];
+        if (this.isBidirectional) {
+            controlPoints = [0, 1, -1, 1, -1, 1];
+        } else {
+            controlPoints = [0, 1, -20, 1, -20, 15];
+        }
+
+        this.#arrow.update(
+                this.from_node.x + this.from_node.r * Math.cos(theta), 
+                this.from_node.y + this.from_node.r * Math.sin(theta), 
+                this.to_node.x - this.to_node.r * Math.cos(theta), 
+                this.to_node.y - this.to_node.r * Math.sin(theta), 
+                controlPoints
+        );
+        this.#arrow.draw(ctx);
+    }
+}
+
 
 //入力例
 var namelist = ["青羽紬", "佐倉想", "戸川湊斗", "桃野奈々", "春尾正輝", "青羽光", "佐倉萌", "佐倉律子"];
@@ -217,7 +230,9 @@ for (var j = 0; j < linkfromlists.length; j++){
         addLink(linknamelists[j][k],linkfromlists[j],linktolists[j][k],linkdirectionlists[j][k]);
     }
 }
+
 //作業効率化のため入力例を相関図ぽく配置する
+/*
 nodes["青羽紬"].x = 300; nodes["青羽紬"].y = 250;
 nodes["佐倉想"].x = 600; nodes["佐倉想"].y = 250;
 nodes["戸川湊斗"].x = 150; nodes["戸川湊斗"].y = 250;
@@ -226,6 +241,7 @@ nodes["春尾正輝"].x = 300; nodes["春尾正輝"].y = 50;
 nodes["青羽光"].x = 300; nodes["青羽光"].y = 600;
 nodes["佐倉萌"].x = 600; nodes["佐倉萌"].y = 600;
 nodes["佐倉律子"].x = 700; nodes["佐倉律子"].y = 550;
+*/
 
 function render(ctx) {
     ctx.clearRect(0, 0, 1000, 1000);
