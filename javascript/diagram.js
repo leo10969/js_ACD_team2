@@ -232,7 +232,6 @@ for (var j = 0; j < linkfromlists.length; j++){
 }
 
 //作業効率化のため入力例を相関図ぽく配置する
-/*
 nodes["青羽紬"].x = 300; nodes["青羽紬"].y = 250;
 nodes["佐倉想"].x = 600; nodes["佐倉想"].y = 250;
 nodes["戸川湊斗"].x = 150; nodes["戸川湊斗"].y = 250;
@@ -241,7 +240,6 @@ nodes["春尾正輝"].x = 300; nodes["春尾正輝"].y = 50;
 nodes["青羽光"].x = 300; nodes["青羽光"].y = 600;
 nodes["佐倉萌"].x = 600; nodes["佐倉萌"].y = 600;
 nodes["佐倉律子"].x = 700; nodes["佐倉律子"].y = 550;
-*/
 
 function render(ctx) {
     ctx.clearRect(0, 0, 1000, 1000);
