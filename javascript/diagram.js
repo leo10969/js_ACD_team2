@@ -193,6 +193,12 @@ class Graph{
         }
     }
 
+    drawNodes(ctx) {
+        for (var name in this.nodes) {
+            this.nodes[name].draw(ctx);
+        }
+    }
+
     drawLinks(ctx) {
         var nodeList = Object.values(this.nodes); // Nodeオブジェクトの配列
         for (var i = 0; i < nodeList.length; i++) {
@@ -271,9 +277,7 @@ function render(ctx, graph) {
     graph.drawLinks(ctx);
 
     // Draw nodes
-    for (var name in graph.nodes) {
-        graph.nodes[name].draw(ctx);
-    }
+    graph.drawNodes(ctx);
 }
 
 for (var i = 0; i < 3; i++){
