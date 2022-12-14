@@ -1,5 +1,6 @@
 import {arrow} from "./arrow.js";
 import {makecanvas} from "./canvas.js";
+import {namelist, grouplist, ranklist, linknamelists, linkfromlists, linktolists, linkdirectionlists} from "./input_example.js";
 
 var cvslist = [];
 var ctxlist = [];
@@ -123,7 +124,6 @@ class Graph{
     // methods
     constructor(cvs) {
         this.#cvs = cvs;
-        console.log(cvs)
     }
 
     addNode(node_name, group, rank) {
@@ -233,13 +233,6 @@ class Graph{
 
 //入力例
 var graphList = [];
-var namelist = ["青羽紬", "佐倉想", "戸川湊斗", "桃野奈々", "春尾正輝", "青羽光", "佐倉萌", "佐倉律子"];
-var grouplist = [["高校同窓生","青羽家"], ["高校同窓生", "佐倉家"], ["高校同窓生"], [],[],["青羽家"], ["佐倉家"], ["佐倉家"]];
-var ranklist = [5,5,3,3,3,1,1,1];
-var linknamelists = [["弟", "元恋人", "交際中", "手話の先生"], ["元恋人", "母", "妹","交際中？"],["交際中"],["交際中？"], ["心配"]];
-var linkfromlists = ["青羽紬", "佐倉想", "戸川湊斗", "桃野奈々","佐倉律子"];
-var linktolists = [["青羽光", "佐倉想","戸川湊斗","春尾正輝"],["青羽紬","佐倉律子","佐倉萌","桃野奈々"],["青羽紬"],["佐倉想"],["佐倉想"]];
-var linkdirectionlists = [[false,true,true,false],[true,false,false,true], [true],[true],[false]];
 
 for (var i = 0; i < 3; i++) {
     var graph = new Graph(cvslist[i]);
