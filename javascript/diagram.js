@@ -259,6 +259,17 @@ for (var i = 0; i < 3; i++) {
     graphList.push(graph);
 }
 
+graphList[1].addNode("春尾A子", ["春尾家"], 1);
+graphList[1].addLink("姉", "春尾正輝", "春尾A子", false);
+graphList[1].nodes["春尾A子"].x = 150;graphList[1].nodes["春尾A子"].y = 50;
+
+graphList[2].addNode("春尾A子", ["春尾家"], 1);
+graphList[2].addLink("姉", "春尾正輝", "春尾A子", false);
+graphList[2].nodes["春尾A子"].x = 150;graphList[1].nodes["春尾A子"].y = 50;
+
+graphList[2].addNode("高校同志", ["高校同窓生"], 1);
+graphList[2].nodes["高校同志"].x = 700;graphList[2].nodes["高校同志"].y = 250;
+
 function render(ctx, graph) {
     ctx.clearRect(0, 0, 1000, 1000);
     ctx.strokeStyle = "gray";
