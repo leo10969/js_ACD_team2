@@ -1,5 +1,5 @@
 //入力例
-import { Graph } from './diagram.js';
+import {makecanvas} from './canvas.js';
 
 var namelist = ["青羽紬", "佐倉想", "戸川湊斗", "桃野奈々", "春尾正輝", "青羽光", "佐倉萌", "佐倉律子"];
 var grouplist = [["高校同窓生","青羽家"], ["高校同窓生", "佐倉家"], ["高校同窓生"], [],[],["青羽家"], ["佐倉家"], ["佐倉家"]];
@@ -9,10 +9,20 @@ var linkfromlists = ["青羽紬", "佐倉想", "戸川湊斗", "桃野奈々","�
 var linktolists = [["青羽光", "佐倉想","戸川湊斗","春尾正輝"],["青羽紬","佐倉律子","佐倉萌","桃野奈々"],["青羽紬"],["佐倉想"],["佐倉想"]];
 var linkdirectionlists = [[false,true,true,false],[true,false,false,true], [true],[true],[false]];
 
+var cvslist = [];
+export var ctxlist = [];
 export var graphList = [];
 
+for (var i=0; i<3; i++){
+    var ret = makecanvas(i.toString());
+    cvslist.push(ret[0]);
+    ctxlist.push(ret[1]);
+}
+
 for (var i = 0; i < 3; i++) {
-    var graph = new Graph(cvslist[i]);
+    var module = await import('./diagram.js');
+    var graph = new module.Graph(cvslist[i]);
+    
     for (var j =0; j < namelist.length; j++){
         graph.addNode(namelist[j], grouplist[j], ranklist[j]);
     }
@@ -46,3 +56,5 @@ graphList[2].nodes["春尾A子"].x = 150;graphList[2].nodes["春尾A子"].y = 50
 
 graphList[2].addNode("高校同志", ["高校同窓生"], 1);
 graphList[2].nodes["高校同志"].x = 700;graphList[2].nodes["高校同志"].y = 250;
+
+console.log(graphList);

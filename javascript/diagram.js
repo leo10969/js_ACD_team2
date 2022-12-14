@@ -1,15 +1,5 @@
 import {arrow} from "./arrow.js";
-import {makecanvas} from "./canvas.js";
-import {graphList} from "./input_example.js";
-
-export var cvslist = [];
-export var ctxlist = [];
-
-for (var i=0; i <3; i++){
-    var ret = makecanvas(i.toString());
-    cvslist.push(ret[0]);
-    ctxlist.push(ret[1]);
-}
+import {graphList, ctxlist} from "./input_example.js";
 
 // Class
 class Node {
@@ -231,6 +221,7 @@ export class Graph{
     }
 }
 
+console.log(graphList);
 
 function render(ctx, graph) {
     ctx.clearRect(0, 0, 1000, 1000);
