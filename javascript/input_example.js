@@ -1,5 +1,6 @@
 //入力例
 import {makecanvas} from './canvas.js';
+import {Graph} from './diagram.js';
 
 var namelist = ["青羽紬", "佐倉想", "戸川湊斗", "桃野奈々", "春尾正輝", "青羽光", "佐倉萌", "佐倉律子"];
 var grouplist = [["高校同窓生","青羽家"], ["高校同窓生", "佐倉家"], ["高校同窓生"], [],[],["青羽家"], ["佐倉家"], ["佐倉家"]];
@@ -20,8 +21,7 @@ for (var i=0; i<3; i++){
 }
 
 for (var i = 0; i < 3; i++) {
-    var module = await import('./diagram.js');
-    var graph = new module.Graph(cvslist[i]);
+    var graph = new Graph(cvslist[i]);
     
     for (var j =0; j < namelist.length; j++){
         graph.addNode(namelist[j], grouplist[j], ranklist[j]);
@@ -56,5 +56,3 @@ graphList[2].nodes["春尾A子"].x = 150;graphList[2].nodes["春尾A子"].y = 50
 
 graphList[2].addNode("高校同志", ["高校同窓生"], 1);
 graphList[2].nodes["高校同志"].x = 700;graphList[2].nodes["高校同志"].y = 250;
-
-console.log(graphList);
