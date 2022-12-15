@@ -117,6 +117,24 @@ class Node {
         ctx.fillText(this.name, this.x-ctx.measureText(this.name).width/2, this.y);
         ctx.fill();
     };
+
+    draw_deleted(ctx){
+        ctx.globalAlpha = 0.5;
+        ctx.fillStyle = "gray";
+        ctx.strokeStyle = "black";
+        ctx.beginPath();
+        ctx.arc(this.x, this.y, this.r, 0, 2 * Math.PI, true);
+        ctx.fill();
+        ctx.stroke();
+        ctx.closePath();
+        ctx.beginPath();
+        ctx.fillStyle = "white";
+        ctx.textBaseline = "middle";
+        ctx.fillText(this.name, this.x-ctx.measureText(this.name).width/2, this.y);
+        ctx.fill();
+        ctx.globalAlpha = 1.0;
+    };
+
 }
 
 class Link {
@@ -159,6 +177,27 @@ class Link {
         );
         this.#arrow.draw(ctx);
     }
+
+    draw_deleted(ctx) {
+        ctx.globalAlpha = 0.3;
+        var theta = Math.atan2((this.to_node.y - this.from_node.y), (this.to_node.x - this.from_node.x));
+        var controlPoints = [];
+        if (this.isBidirectional) {
+            controlPoints = [0, 1, -1, 1, -1, 1];
+        } else {
+            controlPoints = [0, 1, -20, 1, -20, 15];
+        }
+
+        this.#arrow.update(
+                this.from_node.x + this.from_node.r * Math.cos(theta), 
+                this.from_node.y + this.from_node.r * Math.sin(theta), 
+                this.to_node.x - this.to_node.r * Math.cos(theta), 
+                this.to_node.y - this.to_node.r * Math.sin(theta), 
+                controlPoints
+        );
+        this.#arrow.draw(ctx);
+        ctx.globalAlpha = 1.0;
+    }
 }
 
 export class Graph{
@@ -188,6 +227,7 @@ export class Graph{
             this.links[to_node_name][from_node_name] = link;
         }
     }
+
 
     //Nodeにかかるばねの力を計算する
     calcSpringForce(node1, node2) {   
@@ -274,4 +314,5 @@ export class Graph{
             }
         }
     }
+
 }
