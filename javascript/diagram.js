@@ -1,6 +1,42 @@
 import {arrow} from "./arrow.js";
 
 // Class
+class GroupDict {
+    // porperty
+    groupDict = {}; // private変数にすべきか？
+    static #sigletonInstance = null;
+    // methods
+    static getInstance() {
+        if (this.#sigletonInstance == null) {
+            this.#sigletonInstance = new GroupDict();
+        }
+        return this.#sigletonInstance;
+    }
+
+    addGroup(group) {
+        var groupName = group.name;
+        this.groupDict[groupName] = group;
+    }
+
+    searchGroup(groupName) {
+        if (groupName in this.groupDict) {
+            return this.groupDict[groupName];
+        } else {
+            return null;
+        }
+    }
+}
+
+class Group {
+    name = "";
+    size = 0;
+    color = "#808080";
+    constructor(name) {
+        this.name = name;
+        this.color = "hsl(" + Math.round(360 * Math.random()).toString() + ", 100%, 50%)";
+    }
+}
+
 class Node {
     // properties
     name = "";
@@ -14,11 +50,29 @@ class Node {
     // methods
     constructor(name, group=[], rank=1) {
         this.name = name;
-        this.group = group;
+        this.#setGroup(group);
         this.rank = rank;
         this.x = 500*Math.random() + 150;
         this.y = 500*Math.random() + 150;
         this.r = 50+(5*this.rank);
+    }
+
+    #setGroup(groupNameList) {
+        if (groupNameList.length == 0) {
+            groupNameList.push("");
+        }
+
+        for (var i = 0; i < groupNameList.length; i++) {
+            var groupName = groupNameList[i];
+            var groupDict =  GroupDict.getInstance();
+            var group = groupDict.searchGroup(groupName);
+            if (group == null) {
+                group = new Group(groupName);
+                groupDict.addGroup(group);
+            }
+            group.size += 1;
+            this.group.push(group);
+        }
     }
 
     get cvs() {
@@ -48,13 +102,15 @@ class Node {
     }
 
     draw(ctx) {
-        ctx.fillStyle = "gray";
         ctx.strokeStyle = "black";
-        ctx.beginPath();
-        ctx.arc(this.x, this.y, this.r, 0, 2 * Math.PI, true);
-        ctx.fill();
-        ctx.stroke();
-        ctx.closePath();
+        for (var i = 0; i < this.group.length; i++) {
+            ctx.beginPath();
+            ctx.fillStyle = this.group[i].color;
+            ctx.arc(this.x, this.y, this.r, 2 * Math.PI * i / this.group.length, 2 * Math.PI * (i+1) / this.group.length, true);
+            ctx.fill();
+            ctx.stroke();
+            ctx.closePath();
+        }
         ctx.beginPath();
         ctx.fillStyle = "white";
         ctx.textBaseline = "middle";
