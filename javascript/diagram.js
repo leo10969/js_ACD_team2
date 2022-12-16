@@ -3,7 +3,7 @@ import {arrow} from "./arrow.js";
 // Class
 class GroupDict {
     // porperty
-    groupDict = {}; // private変数にすべきか？
+    #groupDict = {};
     static #sigletonInstance = null;
     // methods
     static getInstance() {
@@ -15,12 +15,12 @@ class GroupDict {
 
     addGroup(group) {
         var groupName = group.name;
-        this.groupDict[groupName] = group;
+        this.#groupDict[groupName] = group;
     }
 
     searchGroup(groupName) {
-        if (groupName in this.groupDict) {
-            return this.groupDict[groupName];
+        if (groupName in this.#groupDict) {
+            return this.#groupDict[groupName];
         } else {
             return null;
         }
@@ -103,10 +103,11 @@ class Node {
 
     draw(ctx) {
         ctx.strokeStyle = "black";
-        for (var i = 0; i < this.group.length; i++) {
+        var n = this.group.length;
+        for (var i = 0; i < n; i++) {
             ctx.beginPath();
             ctx.fillStyle = this.group[i].color;
-            ctx.arc(this.x, this.y, this.r, 2 * Math.PI * i / this.group.length, 2 * Math.PI * (i+1) / this.group.length, true);
+            ctx.arc(this.x, this.y, this.r, 2 * Math.PI * i / n, 2 * Math.PI, true);
             ctx.fill();
             ctx.stroke();
             ctx.closePath();
