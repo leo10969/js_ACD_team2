@@ -119,7 +119,7 @@ class Node {
     };
 
     draw_deleted(ctx){
-        ctx.globalAlpha = 0.5;
+        ctx.globalAlpha = 0.3;
         ctx.fillStyle = "gray";
         ctx.strokeStyle = "black";
         ctx.beginPath();

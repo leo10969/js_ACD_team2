@@ -1,0 +1,25 @@
+
+
+.splide__track {
+  margin-top: 30px;
+}
+
+.splide__slide img {
+  height: 200px;
+  object-fit: cover;
+  width: 100%;
+}
+
+.splide__slide {
+  opacity: 0.6;
+}
+
+.splide__slide.is-active {
+  opacity: 1;
+}
+
+.sub {
+/*   text-align: center; */
+  margin: 0 auto;
+  text-align: center;
+}

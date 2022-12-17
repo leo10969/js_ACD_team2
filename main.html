@@ -1,17 +1,61 @@
 <html>
     <head>
         <meta charset="utf-8">
-        <title>tab</title>
+        <title>Auto </title>
         <script type="module" src="javascript/arrow.js"></script>
         <script type="module" src="javascript/diagram.js"></script>
         <script type="module" src="javascript/input_example.js"></script>
 		    <script type="module" src="javascript/canvas.js"></script>
         <script type="module" src="javascript/render.js"></script>
         <script src="javascript/tab.js"></script>
+
+        <link rel=”stylesheet” href=”https://cdn.jsdelivr.net/npm/@splidejs/splide@4.1.4/dist/css/splide.min.css”>
+        <script src="https://cdn.jsdelivr.net/npm/@splidejs/splide@4.1.4/dist/js/splide.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/@splidejs/splide-extension-grid@latest/dist/js/splide-extension-grid.min.js"></script>
+        <script type="module" src="javascript/myslider.js"></script>
     </head>
     <body>
-        <link rel="stylesheet" href="css/tab.css">
-        <div class="tab-panel">
+        <link rel="stylesheet" href="css/main.css">
+        <section id="main-carousel" aria-label="main-slider" class="splide">
+          <div class="splide__track">
+            <ul class="splide__list">
+              <li class="splide__slide">
+                <img src="https://c-limber-official.s3.ap-northeast-1.amazonaws.com/wp-content/uploads/2022/06/21145340/spring.jpg" alt="">
+              </li>
+              <li class="splide__slide">
+                <img src="https://c-limber-official.s3.ap-northeast-1.amazonaws.com/wp-content/uploads/2022/06/21145451/summer.jpg" alt="">
+              </li>
+              <li class="splide__slide">
+                <img src="https://c-limber-official.s3.ap-northeast-1.amazonaws.com/wp-content/uploads/2022/06/21145455/autumn.jpg" alt="">
+              </li>
+              <li class="splide__slide">
+                <img src="https://c-limber-official.s3.ap-northeast-1.amazonaws.com/wp-content/uploads/2022/06/21145500/winter.jpg" alt="">
+              </li>
+            </ul>
+          </div>
+        </section>
+      
+        <!-- thumbnail Splide -->
+        <section id="thumbnail-carousel" class="splide" aria-label="サムネイルスライダー。各サムネイルをクリックすると、メインのスライダーが切り替わります">
+          <div class="splide__track sub">
+            <ul class="splide__list">
+              <li class="splide__slide">
+                <img src="https://c-limber-official.s3.ap-northeast-1.amazonaws.com/wp-content/uploads/2022/06/21145340/spring.jpg" alt="">
+              </li>
+              <li class="splide__slide">
+                <img src="https://c-limber-official.s3.ap-northeast-1.amazonaws.com/wp-content/uploads/2022/06/21145451/summer.jpg" alt="">
+              </li>
+              <li class="splide__slide">
+                <img src="https://c-limber-official.s3.ap-northeast-1.amazonaws.com/wp-content/uploads/2022/06/21145455/autumn.jpg" alt="">
+              </li>
+              <li class="splide__slide">
+                <img src="https://c-limber-official.s3.ap-northeast-1.amazonaws.com/wp-content/uploads/2022/06/21145500/winter.jpg" alt="">
+              </li>
+            </ul>
+          </div>
+        </section>
+
+        <li class="tab-panel">
             <!--タブ-->
             <ul class="tab-group">
               <div class="tab tab-A is-active">Tab-A</div>
@@ -20,12 +64,13 @@
            </ul>
             
             <!--タブを切り替えて表示するコンテンツ-->
-            <div class="panel-group">
+            <li class="panel-group">
               <div class="panel tab-A is-show" id="0"></div>
               <div class="panel tab-B" id="1">Content-B</div>
               <div class="panel tab-C" id="2">Content-C</div>
-            </div>
-        </div>
+            </li>
+        </li>
 		<div id = "canvas1"></div>
+
     </body>
 </html>
