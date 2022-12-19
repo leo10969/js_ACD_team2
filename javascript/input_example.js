@@ -1,6 +1,6 @@
 //入力例
 import {makecanvas} from './canvas.js';
-import {Graph} from './diagram.js';
+import {GraphList} from './diagram.js';
 
 var namelist = ["青羽紬", "佐倉想", "戸川湊斗", "桃野奈々", "春尾正輝", "青羽光", "佐倉萌", "佐倉律子"];
 var grouplist = [["高校同窓生","青羽家"], ["高校同窓生", "佐倉家"], ["高校同窓生"], [],[],["青羽家"], ["佐倉家"], ["佐倉家"]];
@@ -12,7 +12,6 @@ var linkdirectionlists = [[false,true,true,false],[true,false,false,true], [true
 
 var cvslist = [];
 export var ctxlist = [];
-export var graphList = [];
 
 for (var i=0; i<3; i++){
     var ret = makecanvas(i.toString());
@@ -21,7 +20,7 @@ for (var i=0; i<3; i++){
 }
 
 for (var i = 0; i < 3; i++) {
-    var graph = new Graph(cvslist[i]);
+    var graph = GraphList.createGraph(cvslist[i]);
     
     for (var j =0; j < namelist.length; j++){
         graph.addNode(namelist[j], grouplist[j], ranklist[j]);
@@ -42,17 +41,15 @@ for (var i = 0; i < 3; i++) {
     graph.nodes["青羽光"].x = 300; graph.nodes["青羽光"].y = 600;
     graph.nodes["佐倉萌"].x = 600; graph.nodes["佐倉萌"].y = 600;
     graph.nodes["佐倉律子"].x = 700; graph.nodes["佐倉律子"].y = 550;
-
-    graphList.push(graph);
 }
 
-graphList[1].addNode("春尾A子", ["春尾家"], 1);
-graphList[1].addLink("姉", "春尾正輝", "春尾A子", false);
-graphList[1].nodes["春尾A子"].x = 150;graphList[1].nodes["春尾A子"].y = 50;
+GraphList.graphAt(1).addNode("春尾A子", ["春尾家"], 1);
+GraphList.graphAt(1).addLink("姉", "春尾正輝", "春尾A子", false);
+GraphList.graphAt(1).nodes["春尾A子"].x = 150; GraphList.graphAt(1).nodes["春尾A子"].y = 50;
 
-graphList[2].addNode("春尾A子", ["春尾家"], 1);
-graphList[2].addLink("姉", "春尾正輝", "春尾A子", false);
-graphList[2].nodes["春尾A子"].x = 150;graphList[2].nodes["春尾A子"].y = 50;
+GraphList.graphAt(2).addNode("春尾A子", ["春尾家"], 1);
+GraphList.graphAt(2).addLink("姉", "春尾正輝", "春尾A子", false);
+GraphList.graphAt(2).nodes["春尾A子"].x = 150; GraphList.graphAt(2).nodes["春尾A子"].y = 50;
 
-graphList[2].addNode("高校同志", ["高校同窓生"], 1);
-graphList[2].nodes["高校同志"].x = 700;graphList[2].nodes["高校同志"].y = 250;
+GraphList.graphAt(2).addNode("高校同志", ["高校同窓生"], 1);
+GraphList.graphAt(2).nodes["高校同志"].x = 700; GraphList.graphAt(2).nodes["高校同志"].y = 250;

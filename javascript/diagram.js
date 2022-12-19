@@ -45,7 +45,7 @@ class Node {
     x = 0;
     y = 0;
     r = 50;
-    #cvs;
+    #cvsID;
     #isDragged = false;
     // methods
     constructor(name, group=[], rank=1) {
@@ -75,14 +75,11 @@ class Node {
         }
     }
 
-    get cvs() {
-        return this.#cvs;
-    }
-
-    set cvs(cvs) {
+    set cvsID(cvsID) {
         // addEventListenerに追加する関数内でthisを使うとfunctionのほうを参照するのでsetter関数内で使えるselfを用意
         var self = this; 
-        self.#cvs = cvs;
+        self.#cvsID = cvsID;
+        var cvs = GraphList.canvasAt(cvsID);
         cvs.addEventListener("mousedown", function(e) {
             var dx = self.x - (e.clientX - cvs.getBoundingClientRect().left);
             var dy = self.y - (e.clientY - cvs.getBoundingClientRect().top);
@@ -140,6 +137,7 @@ class Node {
 class Link {
     #arrow = new arrow(0, 0, 0, 0, [0, 0, 0, 0, 0, 0]);
     #label = "";
+    #cvsID;
     isBidirectional = false;
     constructor(from_node, to_node) {
         this.from_node = from_node;
@@ -157,6 +155,10 @@ class Link {
     set label(label) {
         this.#label = label;
         this.#arrow.label = label;
+    }
+
+    set cvsID(cvsID) {
+        this.#cvsID = cvsID;
     }
 
     draw(ctx) {
@@ -200,20 +202,24 @@ class Link {
     }
 }
 
-export class Graph{
+class Graph{
     // property
     links = {};
     nodes = {};
-    #cvs = null;
+    #cvsID = -1;
 
     // methods
-    constructor(cvs) {
-        this.#cvs = cvs;
+    constructor(cvsID) {
+        this.#cvsID = cvsID;
+    }
+
+    get cvsID() {
+        return this.#cvsID;
     }
 
     addNode(node_name, group, rank) {
         var node = new Node(node_name, group, rank);
-        node.cvs = this.#cvs;
+        node.cvsID = this.#cvsID;
         this.nodes[node_name] = node;
         this.links[node_name] = {};
     }
@@ -222,12 +228,12 @@ export class Graph{
         var link = new Link(this.nodes[from_node_name], this.nodes[to_node_name]);
         link.label = link_name;
         link.isBidirectional = isBidirectional;
+        link.cvsID = this.#cvsID;
         this.links[from_node_name][to_node_name] = link;
         if (isBidirectional) {
             this.links[to_node_name][from_node_name] = link;
         }
     }
-
 
     //Nodeにかかるばねの力を計算する
     calcSpringForce(node1, node2) {   
@@ -316,14 +322,23 @@ export class Graph{
     }
 }
 
-class GraphList{
-    #graphList = [];
+export class GraphList{
+    static #graphList = [];
+    static #cvsList = [];
 
-    append(graph) {
+    static createGraph(cvs) {
+        var cvsID = this.#graphList.length;
+        var graph = new Graph(cvsID);
         this.#graphList.push(graph);
+        this.#cvsList.push(cvs);
+        return graph;
     }
 
-    at(i) {
+    static graphAt(i) {
         return this.#graphList[i];
+    }
+
+    static canvasAt(i) {
+        return this.#cvsList[i];
     }
 }

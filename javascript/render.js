@@ -1,4 +1,5 @@
-import {ctxlist, graphList} from "./input_example.js";
+import {ctxlist} from "./input_example.js";
+import {GraphList} from "./diagram.js";
 
 function render(ctx, graph) {
     ctx.clearRect(0, 0, 1000, 1000);
@@ -15,5 +16,5 @@ function render(ctx, graph) {
 }
 
 for (var i = 0; i < 3; i++){
-    setInterval(render, 30, ctxlist[i], graphList[i]);
+    setInterval(render, 30, ctxlist[i], GraphList.graphAt(i));
 }
