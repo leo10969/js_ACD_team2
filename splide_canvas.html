@@ -1,0 +1,56 @@
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>splide canvas</title>
+    <script type="module" src="javascript/arrow.js"></script>
+    <script type="module" src="javascript/diagram.js"></script>
+    <script type="module" src="javascript/input_example.js"></script>
+    <script type="module" src="javascript/canvas.js"></script>
+    <script type="module" src="javascript/render.js"></script>
+    <!-- CDN上のファイルを参照 -->
+    <script src="https://cdn.jsdelivr.net/npm/@splidejs/splide@4.1.4/dist/js/splide.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@splidejs/splide-extension-grid@latest/dist/js/splide-extension-grid.min.js"></script>
+    <script type="module" src="javascript/myslider.js"></script>
+    <link ref="stylesheet" href="css/main.css">
+    <link rel="stylesheet" href="splide/dist/css/splide.min.css">
+</head>
+
+<body>
+  <!-- Main Splide -->
+  <section id="main-carousel" class="splide">
+    <div class="splide__track">
+      <ul class="splide__list">
+        <li class="splide__slide">
+          <div class="canvas" id="0"></div>
+        </li>
+        <li class="splide__slide">
+          <div class="canvas" id="1"></div>
+        </li>  
+        <li class="splide__slide">
+          <div class="canvas" id="2"></div>
+        </li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- thumbnail Splide -->
+  <section id="thumbnail-carousel" class="splide" aria-label="サムネイルスライダー。各サムネイルをクリックすると、メインのスライダーが切り替わります">
+    <div class="splide__track sub">
+      <ul class="splide__list">
+        <li class="splide__slide">
+          <div class="canvas" id="0"></div>
+        </li>
+        <li class="splide__slide">
+          <div class="canvas" id="1"></div>
+        </li>  
+        <li class="splide__slide">
+          <div class="canvas" id="2"></div>
+        </li>
+      </ul>
+    </div>
+  </section>
+</body>
+</html>
