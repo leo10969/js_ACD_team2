@@ -281,6 +281,8 @@ class Graph{
                     this.calcRepulsiveForce(node1, node2);
                     this.calcRepulsiveForce(node2, node1);
                 }
+                GraphList.update(node1);
+                GraphList.update(node2);
             }
         }
     }
@@ -322,7 +324,7 @@ class Graph{
     }
 }
 
-export class GraphList{
+export class GraphList {
     static #graphList = [];
     static #cvsList = [];
 
@@ -340,5 +342,16 @@ export class GraphList{
 
     static canvasAt(i) {
         return this.#cvsList[i];
+    }
+
+    static update(node) {
+        for (var i = 0; i < this.#graphList.length; i++) {
+            var graph = this.graphAt(i);
+            if (node.name in graph.nodes) {
+                var target = graph.nodes[node.name];
+                target.y = node.y;
+                target.x = node.x;
+            }
+        }
     }
 }
