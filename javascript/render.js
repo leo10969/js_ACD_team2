@@ -15,6 +15,13 @@ function render(ctx, graph) {
     graph.drawNodes(ctx);
 }
 
+function setTimeoutForRendering(funcRender, interval, timeout, ctx, graph) {
+    var intervalID = setInterval(funcRender, interval, ctx, graph);
+    setTimeout( function() {
+        clearInterval(intervalID);
+    }, timeout);
+}
+
 for (var i = 0; i < 3; i++){
     setInterval(render, 30, ctxlist[i], GraphList.graphAt(i));
 }
