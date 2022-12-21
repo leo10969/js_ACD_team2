@@ -5,6 +5,9 @@
         pagination: false,
         arrows: false,
         drag: false,
+        autoplay: "pause",
+        resetProgress: false,
+        interval: 3000,
       });
 
 
