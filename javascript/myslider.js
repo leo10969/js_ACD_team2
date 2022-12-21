@@ -4,13 +4,14 @@
         rewind: true,
         pagination: false,
         arrows: false,
+        drag: false,
       });
 
 
       var thumbnails = new Splide('#thumbnail-carousel', {
-        fixedWidth: 100, //スライドの幅自体を固定
+        fixedWidth: 200, //スライドの幅自体を固定
         fixedHeight: 60,
-        gap: 30, //スライド間の余白を指定
+        gap: 10, //スライド間の余白を指定
         rewind: true, //スライダーの終わりまで行ったときに、先頭に巻き戻す
         pagination: false, //ページネーションを表示しない
         cover: true,
