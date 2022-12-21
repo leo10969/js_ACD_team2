@@ -14,9 +14,11 @@
 }
 
 .splide__slide .thumbnail{
-  width: auto;
+  width: 0;
+  height: 0;
   object-fit: contain;
   transform: scale(0.2);
+  text-align: center;
 }
 
 .splide__slide {
