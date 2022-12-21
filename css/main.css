@@ -13,6 +13,12 @@
   object-fit: cover;
 }
 
+.splide__slide .thumbnail{
+  width: auto;
+  object-fit: contain;
+  transform: scale(0.2);
+}
+
 .splide__slide {
   opacity: 0.6; /*透明度*/
 }

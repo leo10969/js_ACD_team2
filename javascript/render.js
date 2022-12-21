@@ -14,6 +14,6 @@ function render(ctx, graph) {
     graph.drawNodes(ctx);
 }
 
-for (var i = 0; i < 3; i++){
+for (var i = 0; i < 6; i++){
     setInterval(render, 30, ctxlist[i], graphList[i]);
 }

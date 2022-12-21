@@ -14,7 +14,7 @@ var cvslist = [];
 export var ctxlist = [];
 export var graphList = [];
 
-for (var i=0; i<3; i++){
+for (var i=0; i<6; i++){  // 3->6
     var ret = makecanvas(i.toString());
     cvslist.push(ret[0]);
     ctxlist.push(ret[1]);
@@ -56,3 +56,9 @@ graphList[2].nodes["春尾A子"].x = 150;graphList[2].nodes["春尾A子"].y = 50
 
 graphList[2].addNode("高校同志", ["高校同窓生"], 1);
 graphList[2].nodes["高校同志"].x = 700;graphList[2].nodes["高校同志"].y = 250;
+
+for(var i = 0; i < 3; i++){
+    var graph = new Graph(cvslist[i]);
+    graph = graphList[i];
+    graphList.push(graph);
+}
