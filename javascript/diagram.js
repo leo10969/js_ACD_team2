@@ -90,6 +90,7 @@ class Node {
             if (self.#isDragged) {
                 self.x = e.clientX - cvs.getBoundingClientRect().left;
                 self.y = e.clientY - cvs.getBoundingClientRect().top;
+                GraphList.update(self); // 変更を他のグラフの同一ノードに同期する
             }
         });
 
@@ -202,7 +203,7 @@ class Link {
     }
 }
 
-class Graph{
+class Graph {
     // property
     links = {};
     nodes = {};
@@ -281,6 +282,7 @@ class Graph{
                     this.calcRepulsiveForce(node1, node2);
                     this.calcRepulsiveForce(node2, node1);
                 }
+                // 変更を他のグラフの同一ノードに同期する
                 GraphList.update(node1);
                 GraphList.update(node2);
             }
@@ -325,6 +327,8 @@ class Graph{
 }
 
 export class GraphList {
+    // graphと描画されるキャンバスを管理するクラス
+    // graphはキャンバスのIDを使ってキャンバスにアクセスする
     static #graphList = [];
     static #cvsList = [];
 
