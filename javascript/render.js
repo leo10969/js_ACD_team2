@@ -1,6 +1,4 @@
-import {ctxlist, graphList} from "./input_example.js";
-
-function render(ctx, graph) {
+export function render(ctx, graph) {
     ctx.clearRect(0, 0, 1000, 1000);
     ctx.strokeStyle = "gray";
 
@@ -12,8 +10,5 @@ function render(ctx, graph) {
 
     // Draw nodes
     graph.drawNodes(ctx);
-}
 
-for (var i = 0; i < 6; i++){
-    setInterval(render, 30, ctxlist[i], graphList[i]);
 }

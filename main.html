@@ -1,76 +1,76 @@
-<html>
-    <head>
-        <meta charset="utf-8">
-        <title>Auto </title>
-        <script type="module" src="javascript/arrow.js"></script>
-        <script type="module" src="javascript/diagram.js"></script>
-        <script type="module" src="javascript/input_example.js"></script>
-		    <script type="module" src="javascript/canvas.js"></script>
-        <script type="module" src="javascript/render.js"></script>
-        <script src="javascript/tab.js"></script>
+<html lang="en">
 
-        <link rel=”stylesheet” href=”https://cdn.jsdelivr.net/npm/@splidejs/splide@4.1.4/dist/css/splide.min.css”>
-        <script src="https://cdn.jsdelivr.net/npm/@splidejs/splide@4.1.4/dist/js/splide.min.js"></script>
-        <script src="https://cdn.jsdelivr.net/npm/@splidejs/splide-extension-grid@latest/dist/js/splide-extension-grid.min.js"></script>
-        <script type="module" src="javascript/myslider.js"></script>
-    </head>
-    <body>
-        <link rel="stylesheet" href="css/main.css">
-        <section id="main-carousel" aria-label="main-slider" class="splide">
-          <div class="splide__track">
-            <ul class="splide__list">
-              <li class="splide__slide">
-                <img src="https://c-limber-official.s3.ap-northeast-1.amazonaws.com/wp-content/uploads/2022/06/21145340/spring.jpg" alt="">
-              </li>
-              <li class="splide__slide">
-                <img src="https://c-limber-official.s3.ap-northeast-1.amazonaws.com/wp-content/uploads/2022/06/21145451/summer.jpg" alt="">
-              </li>
-              <li class="splide__slide">
-                <img src="https://c-limber-official.s3.ap-northeast-1.amazonaws.com/wp-content/uploads/2022/06/21145455/autumn.jpg" alt="">
-              </li>
-              <li class="splide__slide">
-                <img src="https://c-limber-official.s3.ap-northeast-1.amazonaws.com/wp-content/uploads/2022/06/21145500/winter.jpg" alt="">
-              </li>
-            </ul>
-          </div>
-        </section>
-      
-        <!-- thumbnail Splide -->
-        <section id="thumbnail-carousel" class="splide" aria-label="サムネイルスライダー。各サムネイルをクリックすると、メインのスライダーが切り替わります">
-          <div class="splide__track sub">
-            <ul class="splide__list">
-              <li class="splide__slide">
-                <img src="https://c-limber-official.s3.ap-northeast-1.amazonaws.com/wp-content/uploads/2022/06/21145340/spring.jpg" alt="">
-              </li>
-              <li class="splide__slide">
-                <img src="https://c-limber-official.s3.ap-northeast-1.amazonaws.com/wp-content/uploads/2022/06/21145451/summer.jpg" alt="">
-              </li>
-              <li class="splide__slide">
-                <img src="https://c-limber-official.s3.ap-northeast-1.amazonaws.com/wp-content/uploads/2022/06/21145455/autumn.jpg" alt="">
-              </li>
-              <li class="splide__slide">
-                <img src="https://c-limber-official.s3.ap-northeast-1.amazonaws.com/wp-content/uploads/2022/06/21145500/winter.jpg" alt="">
-              </li>
-            </ul>
-          </div>
-        </section>
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Auto Chronological Diagram</title>
+    <script type="module" src="javascript/arrow.js"></script>
+    <script type="module" src="javascript/diagram.js"></script>
+    <script type="module" src="javascript/excel_reader.js"></script>
+    <script type="module" src="javascript/canvas.js"></script>
+    <script type="module" src="javascript/render.js"></script>
+    <!-- CDN上のファイルを参照 -->
+    <script src="https://cdn.jsdelivr.net/npm/@splidejs/splide@4.1.4/dist/js/splide.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@splidejs/splide-extension-grid@latest/dist/js/splide-extension-grid.min.js"></script>
+    <script type="module" src="javascript/myslider.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@splidejs/splide@4.1.4/dist/css/splide.min.css">
+    <link rel="stylesheet" href="css/main.css">
 
-        <li class="tab-panel">
-            <!--タブ-->
-            <ul class="tab-group">
-              <div class="tab tab-A is-active">Tab-A</div>
-              <div class="tab tab-B">Tab-B</div>
-              <div class="tab tab-C">Tab-C</div>  
-           </ul>
-            
-            <!--タブを切り替えて表示するコンテンツ-->
-            <li class="panel-group">
-              <div class="panel tab-A is-show" id="0"></div>
-              <div class="panel tab-B" id="1">Content-B</div>
-              <div class="panel tab-C" id="2">Content-C</div>
-            </li>
+    <!--for excel-->
+    <script src="https://code.jquery.com/jquery-3.2.1.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
+    <!-- Latest compiled and minified JavaScript -->
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.11.1/xlsx.full.min.js"></script>
+
+</head>
+
+<body>
+  <!-- Main Splide -->
+  <section id="main-carousel" class="splide">
+    <div class="splide__track">
+      <ul class="splide__list">
+        <li class="splide__slide">
+          <div class="canvas" id="0"></div>
         </li>
-		<div id = "canvas1"></div>
-
-    </body>
+        <li class="splide__slide">
+          <div class="canvas" id="1"></div>
+        </li>  
+        <li class="splide__slide">
+          <div class="canvas" id="2"></div>
+        </li>
+      </ul>
+    </div>
+    <div class="splide__progress">
+      <div class="splide__progress__bar">
+      </div>
+    </div>
+    <button class="splide__toggle" type="button">
+      <span class="splide__toggle__play">play</span>
+      <span class="splide__toggle__pause">pause</span>
+    </button>
+  </section>
+  <form action="" method="get">
+    <input type="file" name="upload_file" id="import-excel" />
+    <h2>Result</h2>
+    <div id="result"></div>
+  </form>
+  
+  <!-- thumbnail Splide -->
+  <section id="thumbnail-carousel" class="splide" aria-label="サムネイルスライダー。各サムネイルをクリックすると、メインのスライダーが切り替わります">
+    <div class="splide__track sub">
+      <ul class="splide__list">
+        <li class="splide__slide">
+          <div class="canvas thumbnail splide__slide__container" id="3"></div>
+        </li>
+        <li class="splide__slide">
+          <div class="canvas thumbnail splide__slide__container" id="4"></div>
+        </li>  
+        <li class="splide__slide">
+          <div class="canvas thumbnail splide__slide__container" id="5"></div>
+        </li>
+      </ul>
+    </div>
+  </section>
+</body>
 </html>
