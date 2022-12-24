@@ -102,15 +102,20 @@ class Node {
     }
 
     draw(ctx) {
-        ctx.strokeStyle = "black";
         for (var i = 0; i < this.group.length; i++) {
+            var theta1 = 3*Math.PI/2 + 2 * Math.PI * i / this.group.length;
+            var theta2 = 3*Math.PI/2 + 2 * Math.PI * (i+1) / this.group.length;
             ctx.beginPath();
+            ctx.arc(this.x, this.y, this.r, theta1, theta2, false);
+            ctx.lineTo(this.x , this.y);
             ctx.fillStyle = this.group[i].color;
-            ctx.arc(this.x, this.y, this.r, 2 * Math.PI * i / this.group.length, 2 * Math.PI * (i+1) / this.group.length, true);
             ctx.fill();
-            ctx.stroke();
-            ctx.closePath();
         }
+        ctx.beginPath();
+        ctx.arc(this.x, this.y, this.r, 0, 2*Math.PI, false);
+        ctx.strokeStyle = "black";
+        ctx.stroke();
+
         ctx.beginPath();
         ctx.fillStyle = "white";
         ctx.textBaseline = "middle";
