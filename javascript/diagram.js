@@ -5,12 +5,37 @@ class GroupDict {
     // porperty
     groupDict = {}; // private変数にすべきか？
     static #sigletonInstance = null;
+    #numOfPop = 0;
     // methods
     static getInstance() {
         if (this.#sigletonInstance == null) {
             this.#sigletonInstance = new GroupDict();
         }
         return this.#sigletonInstance;
+    }
+
+    popColorPool() {
+        this.#numOfPop += 1;
+        var colorType = "";
+        if (this.#numOfPop % 2 == 1) {
+            colorType = "warm";
+        } else {
+            colorType = "cold";
+        }
+
+        if (colorType == "warm") {
+            if ( this.#numOfPop % 4 == 1) {
+                return "hsl(" + Math.round(50 * Math.random()).toString() + ", 100%, 50%)";
+            } else {
+                return "hsl(" + (Math.round(50 * Math.random()) + 60).toString() + ", 100%, 50%)";
+            }
+        } else {
+            if ( this.#numOfPop % 4 == 0) {
+                return "hsl(" + (Math.round(50 * Math.random()) + 190).toString() + ", 100%, 50%)";
+            } else {
+                return "hsl(" + (Math.round(50 * Math.random()) + 250).toString() + ", 100%, 50%)";
+            }
+        }
     }
 
     addGroup(group) {
@@ -32,8 +57,9 @@ class Group {
     size = 0;
     color = "#808080";
     constructor(name) {
+        var groupDict = GroupDict.getInstance();
         this.name = name;
-        this.color = "hsl(" + Math.round(360 * Math.random()).toString() + ", 100%, 50%)";
+        this.color = groupDict.popColorPool();
     }
 }
 
