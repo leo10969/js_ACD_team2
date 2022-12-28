@@ -33,7 +33,9 @@
 .sub {
   margin: 0 auto;
   text-align: center;
+  height: 200px;
 }
+
 
 .splide__progress__bar {
   height: 3px;
