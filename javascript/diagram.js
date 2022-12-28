@@ -45,7 +45,7 @@ class Node {
     x = 0;
     y = 0;
     r = 50;
-    #cvsID;
+    #cvs;
     #isDragged = false;
     // methods
     constructor(name, group=[], rank=1) {
@@ -75,11 +75,10 @@ class Node {
         }
     }
 
-    set cvsID(cvsID) {
+    set cvs(cvs) {
         // addEventListenerに追加する関数内でthisを使うとfunctionのほうを参照するのでsetter関数内で使えるselfを用意
         var self = this; 
-        self.#cvsID = cvsID;
-        var cvs = GraphList.canvasAt(cvsID);
+        self.#cvs = cvs;
         cvs.addEventListener("mousedown", function(e) {
             var dx = self.x - (e.clientX - cvs.getBoundingClientRect().left);
             var dy = self.y - (e.clientY - cvs.getBoundingClientRect().top);
@@ -138,7 +137,7 @@ class Node {
 class Link {
     #arrow = new arrow(0, 0, 0, 0, [0, 0, 0, 0, 0, 0]);
     #label = "";
-    #cvsID;
+    #cvs;
     isBidirectional = false;
     constructor(from_node, to_node) {
         this.from_node = from_node;
@@ -158,8 +157,8 @@ class Link {
         this.#arrow.label = label;
     }
 
-    set cvsID(cvsID) {
-        this.#cvsID = cvsID;
+    set cvs(cvs) {
+        this.#cvs = cvs;
     }
 
     draw(ctx) {
@@ -207,20 +206,20 @@ class Graph {
     // property
     links = {};
     nodes = {};
-    #cvsID = -1;
+    #cvs;
 
     // methods
-    constructor(cvsID) {
-        this.#cvsID = cvsID;
+    constructor(cvs) {
+        this.#cvs = cvs;
     }
 
-    get cvsID() {
-        return this.#cvsID;
+    get cvs() {
+        return this.#cvs;
     }
 
     addNode(node_name, group, rank) {
         var node = new Node(node_name, group, rank);
-        node.cvsID = this.#cvsID;
+        node.cvs = this.#cvs;
         this.nodes[node_name] = node;
         this.links[node_name] = {};
     }
@@ -229,7 +228,7 @@ class Graph {
         var link = new Link(this.nodes[from_node_name], this.nodes[to_node_name]);
         link.label = link_name;
         link.isBidirectional = isBidirectional;
-        link.cvsID = this.#cvsID;
+        link.cvs = this.#cvs;
         this.links[from_node_name][to_node_name] = link;
         if (isBidirectional) {
             this.links[to_node_name][from_node_name] = link;
@@ -333,8 +332,7 @@ export class GraphList {
     static #cvsList = [];
 
     static createGraph(cvs) {
-        var cvsID = this.#graphList.length;
-        var graph = new Graph(cvsID);
+        var graph = new Graph(cvs);
         this.#graphList.push(graph);
         this.#cvsList.push(cvs);
         return graph;
