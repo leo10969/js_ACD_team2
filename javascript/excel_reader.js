@@ -5,6 +5,8 @@ import {render} from './render.js';
 var cvslist = [];
 export var ctxlist = [];
 export var graphList = [];
+export var nodeTable = {};
+var graphIndex = 0;
 
 (function (window, document) {
   window.ExcelJs = {};
@@ -146,6 +148,25 @@ function pushToGraphList(name, content) {
   setInterval(render, 30, ctxlist[i], graphList[i]);
 }
 
+function pushToNodeTable(name, content){
+  for (var i =0; i<content["ノード情報"].length; i++) {
+    var name = content["ノード情報"][i]["名前"];
+    
+    if(name in nodeTable){
+      nodeTable.name[graphIndex] = 1;
+      console.log("name in nodetable");
+    }
+    else{
+      nodeTable.name = Array(24);
+      for(var j = 0; j < 24; j++){
+        nodeTable.name[j] = 0;
+      }
+      nodeTable.name[graphIndex] = 1;
+    }
+    console.log(nodeTable);
+  }
+}
+
 
 document.getElementById('import-excel').addEventListener('change', function (evt) {
   var files = evt.target.files;
@@ -153,7 +174,10 @@ document.getElementById('import-excel').addEventListener('change', function (evt
   for (i = 0, f = files[i]; i != files.length; ++i) {
     var er = new ExcelJs.Reader(f, function (e, xlsx) {
       pushToGraphList(xlsx.getFile().name, xlsx.toJson());
+      pushToNodeTable(xlsx.getFile().name, xlsx.toJson());
+      graphIndex++;
       console.log(xlsx.toJson()["リンク情報"]);
     });
   }
+  
 }, false);

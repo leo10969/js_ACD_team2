@@ -1,4 +1,5 @@
 import {arrow} from "./arrow.js";
+import { graphList } from "./excel_reader.js";
 
 // Class
 class GroupDict {
