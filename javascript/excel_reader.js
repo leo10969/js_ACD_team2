@@ -141,7 +141,7 @@ function pushToGraphList(name, content) {
     graph.addLink(linknamelists[j], linkfromlists[j], linktolist[j], linkdirectionlists[j]);
   } 
 
-  console.log(graphList);
+  GraphList.graphAt(i).initPos();
   setInterval(render, 30, ctxlist[i], GraphList.graphAt(i));
 }
 
