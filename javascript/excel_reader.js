@@ -137,12 +137,11 @@ function pushToGraphList(name, content) {
 
   for (var j = 0; j < linkfromlists.length; j++){
     graph.addLink(linknamelists[j], linkfromlists[j], linktolist[j], linkdirectionlists[j]);
-  } 
+  }
   var count = 0;
   var timer = setInterval(function(){
     count++;
   })
-
   GraphList.graphAt(i).initPos();
   setInterval(render, 30, ctxlist[i], GraphList.graphAt(i));
   setTimeout(function() {
@@ -157,7 +156,6 @@ document.getElementById('import-excel').addEventListener('change', function (evt
   for (i = 0, f = files[i]; i != files.length; ++i) {
     var er = new ExcelJs.Reader(f, function (e, xlsx) {
       pushToGraphList(xlsx.getFile().name, xlsx.toJson());
-      console.log(xlsx.toJson()["リンク情報"]);
     });
   }
 }, false);
