@@ -1,5 +1,5 @@
 export function render(ctx, graph) {
-    ctx.clearRect(0, 0, 1000, 1000);
+    ctx.clearRect(0, 0, 1000, 700);
     ctx.strokeStyle = "gray";
 
     // Calculate force

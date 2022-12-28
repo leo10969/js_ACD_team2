@@ -129,8 +129,6 @@ function pushToGraphList(name, content) {
   var ret = makecanvas(i.toString());
   cvslist.push(ret[0]);
   ctxlist.push(ret[1]);
-  console.log(cvslist);
-  console.log(ctxlist);
   
   var graph = GraphList.createGraph(cvslist[i]);
   for (var j =0; j < namelist.length; j++){
@@ -140,9 +138,14 @@ function pushToGraphList(name, content) {
   for (var j = 0; j < linkfromlists.length; j++){
     graph.addLink(linknamelists[j], linkfromlists[j], linktolist[j], linkdirectionlists[j]);
   } 
-
-  console.log(graphList);
+  var count = 0;
+  var timer = setInterval(function(){
+    count++;
+  })
   setInterval(render, 30, ctxlist[i], GraphList.graphAt(i));
+  setTimeout(function() {
+    clearInterval(timer);
+ }, 5000);
 }
 
 
