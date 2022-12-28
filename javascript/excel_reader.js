@@ -1,4 +1,4 @@
-import {Graph} from './diagram.js';
+import {GraphList} from './diagram.js';
 import {makecanvas} from './canvas.js';
 import {render} from './render.js';
 
@@ -132,7 +132,7 @@ function pushToGraphList(name, content) {
   console.log(cvslist);
   console.log(ctxlist);
   
-  var graph = new Graph(cvslist[i]);
+  var graph = GraphList.createGraph(cvslist[i]);
   for (var j =0; j < namelist.length; j++){
     graph.addNode(namelist[j], grouplist[j], ranklist[j]);
   }
@@ -141,9 +141,8 @@ function pushToGraphList(name, content) {
     graph.addLink(linknamelists[j], linkfromlists[j], linktolist[j], linkdirectionlists[j]);
   } 
 
-  graphList.push(graph);
   console.log(graphList);
-  setInterval(render, 30, ctxlist[i], graphList[i]);
+  setInterval(render, 30, ctxlist[i], GraphList.graphAt(i));
 }
 
 

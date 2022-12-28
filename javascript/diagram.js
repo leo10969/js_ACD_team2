@@ -76,14 +76,14 @@ class Node {
     // methods
     constructor(name, group=[], rank=1) {
         this.name = name;
-        this.#setGroup(group);
+        this.setGroup(group);
         this.rank = rank;
         this.x = 500*Math.random() + 150;
         this.y = 500*Math.random() + 150;
         this.r = 50+(5*this.rank);
     }
 
-    #setGroup(groupNameList) {
+    setGroup(groupNameList) {
         if (groupNameList.length == 0) {
             groupNameList.push("");
         }
@@ -101,10 +101,6 @@ class Node {
         }
     }
 
-    get cvs() {
-        return this.#cvs;
-    }
-
     set cvs(cvs) {
         // addEventListenerに追加する関数内でthisを使うとfunctionのほうを参照するのでsetter関数内で使えるselfを用意
         var self = this; 
@@ -119,6 +115,7 @@ class Node {
             if (self.#isDragged) {
                 self.x = e.clientX - cvs.getBoundingClientRect().left;
                 self.y = e.clientY - cvs.getBoundingClientRect().top;
+                GraphList.update(self); // 変更を他のグラフの同一ノードに同期する
             }
         });
 
@@ -171,6 +168,7 @@ class Node {
 class Link {
     #arrow = new arrow(0, 0, 0, 0, [0, 0, 0, 0, 0, 0]);
     #label = "";
+    #cvs;
     isBidirectional = false;
     constructor(from_node, to_node) {
         this.from_node = from_node;
@@ -188,6 +186,10 @@ class Link {
     set label(label) {
         this.#label = label;
         this.#arrow.label = label;
+    }
+
+    set cvs(cvs) {
+        this.#cvs = cvs;
     }
 
     draw(ctx) {
@@ -231,15 +233,19 @@ class Link {
     }
 }
 
-export class Graph{
+class Graph {
     // property
     links = {};
     nodes = {};
-    #cvs = null;
+    #cvs;
 
     // methods
     constructor(cvs) {
         this.#cvs = cvs;
+    }
+
+    get cvs() {
+        return this.#cvs;
     }
 
     addNode(node_name, group, rank) {
@@ -253,6 +259,7 @@ export class Graph{
         var link = new Link(this.nodes[from_node_name], this.nodes[to_node_name]);
         link.label = link_name;
         link.isBidirectional = isBidirectional;
+        link.cvs = this.#cvs;
         this.links[from_node_name][to_node_name] = link;
         if (isBidirectional) {
             this.links[to_node_name][from_node_name] = link;
@@ -306,6 +313,9 @@ export class Graph{
                     this.calcRepulsiveForce(node1, node2);
                     this.calcRepulsiveForce(node2, node1);
                 }
+                // 変更を他のグラフの同一ノードに同期する
+                GraphList.update(node1);
+                GraphList.update(node2);
             }
         }
     }
@@ -345,5 +355,42 @@ export class Graph{
             }
         }
     }
+}
 
+export class GraphList {
+    // graphと描画されるキャンバスを管理するクラス
+    // graphはキャンバスのIDを使ってキャンバスにアクセスする
+    static #graphList = [];
+    static #cvsList = [];
+
+    static createGraph(cvs) {
+        var graph = new Graph(cvs);
+        this.#graphList.push(graph);
+        this.#cvsList.push(cvs);
+        return graph;
+    }
+
+    static pushGraph(graph) {
+        this.#graphList.push(graph);
+        this.#cvsList.push(graph.cvs);
+    }
+
+    static graphAt(i) {
+        return this.#graphList[i];
+    }
+
+    static canvasAt(i) {
+        return this.#cvsList[i];
+    }
+
+    static update(node) {
+        for (var i = 0; i < this.#graphList.length; i++) {
+            var graph = this.graphAt(i);
+            if (node.name in graph.nodes) {
+                var target = graph.nodes[node.name];
+                target.y = node.y;
+                target.x = node.x;
+            }
+        }
+    }
 }
