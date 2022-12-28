@@ -142,6 +142,8 @@ function pushToGraphList(name, content) {
   var timer = setInterval(function(){
     count++;
   })
+
+  GraphList.graphAt(i).initPos();
   setInterval(render, 30, ctxlist[i], GraphList.graphAt(i));
   setTimeout(function() {
     clearInterval(timer);

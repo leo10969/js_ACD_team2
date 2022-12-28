@@ -248,6 +248,17 @@ class Graph {
         return this.#cvs;
     }
 
+    initPos() {
+        var nodeList = Object.values(this.nodes);
+        var numOfNodes = nodeList.length;
+        for (var i = 0;  i < numOfNodes; i++) {
+            var node = nodeList[i];
+            var theta = 2 * Math.PI * i / numOfNodes;
+            node.x = 500 + 350*Math.cos(theta);
+            node.y = 350 + 350*Math.sin(theta);
+        }
+    }
+
     addNode(node_name, group, rank) {
         var node = new Node(node_name, group, rank);
         node.cvs = this.#cvs;
