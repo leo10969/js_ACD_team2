@@ -238,6 +238,7 @@ class Graph {
     links = {};
     nodes = {};
     #cvs;
+    isCalculatingForce = true;
 
     // methods
     constructor(cvs) {
@@ -310,23 +311,25 @@ class Graph {
     }
 
     calcForce() {
-        var nodeList = Object.values(this.nodes); // Nodeオブジェクトの配列
-        for (var i = 0; i < nodeList.length; i++) {
-            var node1 = nodeList[i];
-            for (var j = i+1; j < nodeList.length; j++) {
-                var node2 = nodeList[j];
-                if(node1.name in this.links[node2.name] || node2.name in this.links[node1.name]) {
-                    // ばねの計算
-                    this.calcSpringForce(node1, node2);
-                    this.calcSpringForce(node2, node1);
-                }else {
-                    // 斥力・引力の計算
-                    this.calcRepulsiveForce(node1, node2);
-                    this.calcRepulsiveForce(node2, node1);
+        if (this.isCalculatingForce) {
+            var nodeList = Object.values(this.nodes); // Nodeオブジェクトの配列
+            for (var i = 0; i < nodeList.length; i++) {
+                var node1 = nodeList[i];
+                for (var j = i+1; j < nodeList.length; j++) {
+                    var node2 = nodeList[j];
+                    if(node1.name in this.links[node2.name] || node2.name in this.links[node1.name]) {
+                        // ばねの計算
+                        this.calcSpringForce(node1, node2);
+                        this.calcSpringForce(node2, node1);
+                    }else {
+                        // 斥力・引力の計算
+                        this.calcRepulsiveForce(node1, node2);
+                        this.calcRepulsiveForce(node2, node1);
+                    }
+                    // 変更を他のグラフの同一ノードに同期する
+                    GraphList.update(node1);
+                    GraphList.update(node2);
                 }
-                // 変更を他のグラフの同一ノードに同期する
-                GraphList.update(node1);
-                GraphList.update(node2);
             }
         }
     }
@@ -373,6 +376,10 @@ export class GraphList {
     // graphはキャンバスのIDを使ってキャンバスにアクセスする
     static #graphList = [];
     static #cvsList = [];
+
+    static get length() {
+        return this.#graphList.length;
+    }
 
     static createGraph(cvs) {
         var graph = new Graph(cvs);

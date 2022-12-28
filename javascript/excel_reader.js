@@ -143,6 +143,10 @@ function pushToGraphList(name, content) {
 
   GraphList.graphAt(i).initPos();
   setInterval(render, 30, ctxlist[i], GraphList.graphAt(i));
+  console.log(graph.isCalculatingForce);
+  setTimeout(function() {
+    graph.isCalculatingForce = false;
+  }, 10000);
 }
 
 
