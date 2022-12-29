@@ -1,5 +1,6 @@
 .splide__track {
   margin-top: 30px;
+  height: 600;
 }
 
 .sub .splide__list {
@@ -32,7 +33,9 @@
 .sub {
   margin: 0 auto;
   text-align: center;
+  height: 200px;
 }
+
 
 .splide__progress__bar {
   height: 3px;
