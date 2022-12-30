@@ -1,5 +1,4 @@
 export function makecanvas(cvsid){
-    console.log(document.getElementById(cvsid).children);
     if(document.getElementById(cvsid).children.length == 0){
         var cvs = document.createElement("canvas");
         cvs.width = 1000;

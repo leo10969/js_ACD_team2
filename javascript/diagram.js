@@ -309,8 +309,8 @@ class Graph {
         }
     }
 
-    //Nodeの移動を計算する
-    wallForce(node, isout) {
+    //Nodeが外に出そうか判定する(条件で用いている数字はいい感じになるように設定)
+    wallJudge(node, isout) {
         if(node.x > 900){
             node.x -= node.x-900 + 25;
             isout = true;
@@ -335,13 +335,19 @@ class Graph {
         var isout = false;
         for (var i = 0; i < nodeList.length; i++) {
             var node1 = nodeList[i];
-            isout = this.wallForce(node1, isout);
+            //外に出そうな場合はTrueを返す
+            isout = this.wallJudge(node1, isout);
             if(isout) break;
 
             for (var j = i+1; j < nodeList.length; j++) {
                 var node2 = nodeList[j];
-                isout = this.wallForce(node2, isout);
+                isout = this.wallJudge(node2, isout);
                 if(isout) break;
+
+                if(Math.abs(node1.x-node2.x) < node2.r && Math.abs(node1.y-node2.y) < node2.r){
+                    node2.x = 500*Math.random() + 150;
+                    node2.y = 500*Math.random() + 150;
+                }
                 
                 if(node1.name in this.links[node2.name] || node2.name in this.links[node1.name]) {
                     // ばねの計算

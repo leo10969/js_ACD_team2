@@ -1,3 +1,6 @@
+.myslide__name{
+  text-align: center;
+}
 .splide__track {
   margin-top: 30px;
   height: 600;
@@ -13,7 +16,10 @@
   height: 100%;
   object-fit: cover;
 }
-
+.splide__slide .name{
+  text-align: center;
+  font-size: 20px;
+}
 .splide__slide .thumbnail{
   width: 0;
   height: 0;

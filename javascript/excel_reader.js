@@ -95,6 +95,12 @@ function handleCodePoints(array) {
 }
 
 function pushToGraphList(name, content) {
+  //FileName
+  /* var elem = document.getElementById('file_name');
+  var html = elem.innerHTML;
+  html = "<h2>" + name.slice(0, name.length-5) +  " is uploaded! </h2>";
+  elem.innerHTML = html; */
+
   // Nodes
   var namelist = [];
   var grouplist = [];
@@ -140,10 +146,10 @@ function pushToGraphList(name, content) {
   }
 
   GraphList.graphAt(i).initPos();
-  var timer = setInterval(render, 30, ctxlist[i], GraphList.graphAt(i));
+  var timer = setInterval(render, 100, ctxlist[i], GraphList.graphAt(i));
   timer;
   //20秒後にタイマーを止める
-  setTimeout(function(){clearInterval(timer);}, 20000);
+  //setTimeout(function(){clearInterval(timer);}, 20000);
 }
 
 
