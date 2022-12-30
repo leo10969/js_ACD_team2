@@ -309,12 +309,40 @@ class Graph {
         }
     }
 
+    //Nodeの移動を計算する
+    wallForce(node, isout) {
+        if(node.x > 900){
+            node.x -= node.x-900 + 25;
+            isout = true;
+        }
+        else if(node.x < 100){
+            node.x += 100-node.x + 25;
+            isout = true;
+        }
+
+        if(node.y > 520){
+            node.y -= node.y-520 + 25;
+            isout = true;
+        }
+        else if(node.y < 50){
+            node.y += 50-node.y + 25;
+            isout = true;
+        }
+        return isout;
+    }
     calcForce() {
         var nodeList = Object.values(this.nodes); // Nodeオブジェクトの配列
+        var isout = false;
         for (var i = 0; i < nodeList.length; i++) {
             var node1 = nodeList[i];
+            isout = this.wallForce(node1, isout);
+            if(isout) break;
+
             for (var j = i+1; j < nodeList.length; j++) {
                 var node2 = nodeList[j];
+                isout = this.wallForce(node2, isout);
+                if(isout) break;
+                
                 if(node1.name in this.links[node2.name] || node2.name in this.links[node1.name]) {
                     // ばねの計算
                     this.calcSpringForce(node1, node2);

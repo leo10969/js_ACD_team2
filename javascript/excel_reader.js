@@ -138,15 +138,12 @@ function pushToGraphList(name, content) {
   for (var j = 0; j < linkfromlists.length; j++){
     graph.addLink(linknamelists[j], linkfromlists[j], linktolist[j], linkdirectionlists[j]);
   }
-  var count = 0;
-  var timer = setInterval(function(){
-    count++;
-  })
+
   GraphList.graphAt(i).initPos();
-  setInterval(render, 30, ctxlist[i], GraphList.graphAt(i));
-  setTimeout(function() {
-    clearInterval(timer);
- }, 5000);
+  var timer = setInterval(render, 30, ctxlist[i], GraphList.graphAt(i));
+  timer;
+  //20秒後にタイマーを止める
+  setTimeout(function(){clearInterval(timer);}, 20000);
 }
 
 
