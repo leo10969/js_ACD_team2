@@ -150,6 +150,10 @@ function pushToGraphList(name, content) {
   timer;
   //20秒後にタイマーを止める
   //setTimeout(function(){clearInterval(timer);}, 20000);
+  //20秒後に力の計算を止める
+  //setTimeout(function() {
+  //  graph.isCulculatingForce = false;
+  //}, 20000);
 }
 
 

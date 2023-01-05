@@ -238,6 +238,7 @@ class Graph {
     links = {};
     nodes = {};
     #cvs;
+    isCulculatingForce = true;
 
     // methods
     constructor(cvs) {
@@ -331,36 +332,38 @@ class Graph {
         return isout;
     }
     calcForce() {
-        var nodeList = Object.values(this.nodes); // Nodeオブジェクトの配列
-        var isout = false;
-        for (var i = 0; i < nodeList.length; i++) {
-            var node1 = nodeList[i];
-            //外に出そうな場合はTrueを返す
-            isout = this.wallJudge(node1, isout);
-            if(isout) break;
-
-            for (var j = i+1; j < nodeList.length; j++) {
-                var node2 = nodeList[j];
-                isout = this.wallJudge(node2, isout);
+        if (this.isCulculatingForce) {
+            var nodeList = Object.values(this.nodes); // Nodeオブジェクトの配列
+            var isout = false;
+            for (var i = 0; i < nodeList.length; i++) {
+                var node1 = nodeList[i];
+                //外に出そうな場合はTrueを返す
+                isout = this.wallJudge(node1, isout);
                 if(isout) break;
 
-                if(Math.abs(node1.x-node2.x) < node2.r && Math.abs(node1.y-node2.y) < node2.r){
-                    node2.x = 500*Math.random() + 150;
-                    node2.y = 500*Math.random() + 150;
+                for (var j = i+1; j < nodeList.length; j++) {
+                    var node2 = nodeList[j];
+                    isout = this.wallJudge(node2, isout);
+                    if(isout) break;
+
+                    if(Math.abs(node1.x-node2.x) < node2.r && Math.abs(node1.y-node2.y) < node2.r){
+                        node2.x = 500*Math.random() + 150;
+                        node2.y = 500*Math.random() + 150;
+                    }
+                    
+                    if(node1.name in this.links[node2.name] || node2.name in this.links[node1.name]) {
+                        // ばねの計算
+                        this.calcSpringForce(node1, node2);
+                        this.calcSpringForce(node2, node1);
+                    }else {
+                        // 斥力・引力の計算
+                        this.calcRepulsiveForce(node1, node2);
+                        this.calcRepulsiveForce(node2, node1);
+                    }
+                    // 変更を他のグラフの同一ノードに同期する
+                    GraphList.update(node1);
+                    GraphList.update(node2);
                 }
-                
-                if(node1.name in this.links[node2.name] || node2.name in this.links[node1.name]) {
-                    // ばねの計算
-                    this.calcSpringForce(node1, node2);
-                    this.calcSpringForce(node2, node1);
-                }else {
-                    // 斥力・引力の計算
-                    this.calcRepulsiveForce(node1, node2);
-                    this.calcRepulsiveForce(node2, node1);
-                }
-                // 変更を他のグラフの同一ノードに同期する
-                GraphList.update(node1);
-                GraphList.update(node2);
             }
         }
     }
