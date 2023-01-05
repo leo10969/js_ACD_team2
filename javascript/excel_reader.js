@@ -1,10 +1,13 @@
-import {GraphList} from './diagram.js';
-import {makecanvas} from './canvas.js';
-import {render} from './render.js';
+import {GraphList, GraphList_thumbnail} from './diagram.js';
+import {makecanvas, makecanvas_thumbnail} from './canvas.js';
+import {render, render_thumbnail} from './render.js';
 
 var cvslist = [];
 export var ctxlist = [];
 export var graphList = [];
+
+var cvslist_thumbnail = [];
+export var ctxlist_thumbnail = [];
 
 (function (window, document) {
   window.ExcelJs = {};
@@ -135,19 +138,36 @@ function pushToGraphList(name, content) {
   var ret = makecanvas(i.toString());
   cvslist.push(ret[0]);
   ctxlist.push(ret[1]);
+
+  var j = i + 11;
+  var ret_tumbnail = makecanvas(j.toString());
+  cvslist_thumbnail.push(ret_tumbnail[0]);
+  ctxlist_thumbnail.push(ret_tumbnail[1]);
   
   var graph = GraphList.createGraph(cvslist[i]);
-  for (var j =0; j < namelist.length; j++){
-    graph.addNode(namelist[j], grouplist[j], ranklist[j]);
+  var graph_thumbnail = GraphList_thumbnail.createGraph(cvslist_thumbnail[i]);
+  for (var k =0; k < namelist.length; k++){
+    graph.addNode(namelist[k], grouplist[k], ranklist[k]);
+    graph_thumbnail.addNode(namelist[k], grouplist[k], ranklist[k]);
   }
 
-  for (var j = 0; j < linkfromlists.length; j++){
-    graph.addLink(linknamelists[j], linkfromlists[j], linktolist[j], linkdirectionlists[j]);
+  for (var k = 0; k < linkfromlists.length; k++){
+    graph.addLink(linknamelists[k], linkfromlists[k], linktolist[k], linkdirectionlists[k]);
+    graph_thumbnail.addLink(linknamelists[k], linkfromlists[k], linktolist[k], linkdirectionlists[k]);
   }
+
+  
 
   GraphList.graphAt(i).initPos();
-  var timer = setInterval(render, 100, ctxlist[i], GraphList.graphAt(i));
+  GraphList_thumbnail.graphAt(i).initPos();
+  // var timer = setInterval(render, 100, ctxlist[i], GraphList.graphAt(i));
+  // timer;
+  var timer = setInterval(function(){
+    render(ctxlist[i], GraphList.graphAt(i));
+    render(ctxlist_thumbnail[i], GraphList_thumbnail.graphAt(i));
+  }, 100);
   timer;
+  console.log(graph_thumbnail);
   //20秒後にタイマーを止める
   //setTimeout(function(){clearInterval(timer);}, 20000);
 }

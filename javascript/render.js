@@ -12,8 +12,16 @@ export function render(ctx, graph) {
     graph.drawNodes(ctx);
 }
 
-/*
-for (var i = 0; i < 6; i++){
-    setInterval(render, 30, ctxlist[i], GraphList.graphAt(i));
+export function render_thumbnail(ctx, graph) {
+    ctx.clearRect(0, 0, 100, 100);
+    ctx.strokeStyle = "gray";
+
+    // Calculate force
+    graph.calcForce();
+
+    // Draw links
+    graph.drawLinks(ctx);
+
+    // Draw nodes
+    graph.drawNodes(ctx);
 }
-*/
