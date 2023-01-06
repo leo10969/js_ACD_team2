@@ -1,4 +1,4 @@
-import {GraphList, GraphList_thumbnail} from './diagram.js';
+import {Changes, GraphList, GraphList_thumbnail} from './diagram.js';
 import {makecanvas, makecanvas_thumbnail} from './canvas.js';
 import {render, render_thumbnail} from './render.js';
 
@@ -166,8 +166,8 @@ function pushToGraphList(name, content) {
     render(ctxlist_thumbnail[i], GraphList_thumbnail.graphAt(i));
   }, 100);
   timer;
-  var get = GraphList.getGraphList();
-  console.log(get[0].nodes);
+  var get = Changes.getNodes();
+  console.log(get);
   //20秒後にタイマーを止める
   //setTimeout(function(){clearInterval(timer);}, 20000);
 }

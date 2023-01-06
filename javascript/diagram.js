@@ -482,7 +482,28 @@ export class GraphList_thumbnail {
     }
 }
 
-// class Changes{
-//     newNodes = [];
-//     for(i = 0; i < )
-// }
+export class Changes{
+    static newNodes = [];
+    static gList = GraphList.getGraphList();
+    static preNodes = this.gList[0];
+    static curNodes = this.gList[0];
+
+    static getNodes(){
+        
+        // var pre_id = ;
+        // var id = 
+        this.preNodes = this.gList[pre_id];
+        this.curNodes = this.gList[id];
+        return id;
+    }
+
+    // 追加ノードを探して，newNodeに入れる
+    static searchNewNodes(){
+        for(var i = 0; i < this.curNodes.length; i++){
+            if(this.curNodes[i] in this.preNodes){
+            }else{
+                newNodes.push(this.curNodes[i]);
+            }
+        }
+    }
+}
