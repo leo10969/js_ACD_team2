@@ -4,7 +4,6 @@ import {render, render_thumbnail} from './render.js';
 
 var cvslist = [];
 export var ctxlist = [];
-export var graphList = [];
 
 var cvslist_thumbnail = [];
 export var ctxlist_thumbnail = [];
@@ -167,7 +166,8 @@ function pushToGraphList(name, content) {
     render(ctxlist_thumbnail[i], GraphList_thumbnail.graphAt(i));
   }, 100);
   timer;
-  console.log(graph_thumbnail);
+  var get = GraphList.getGraphList();
+  console.log(get[0].nodes);
   //20秒後にタイマーを止める
   //setTimeout(function(){clearInterval(timer);}, 20000);
 }

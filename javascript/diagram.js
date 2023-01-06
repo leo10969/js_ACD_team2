@@ -438,6 +438,10 @@ export class GraphList {
             }
         }
     }
+
+    static getGraphList(){
+        return this.#graphList;
+    }
 }
 
 export class GraphList_thumbnail {
@@ -477,3 +481,8 @@ export class GraphList_thumbnail {
         }
     }
 }
+
+// class Changes{
+//     newNodes = [];
+//     for(i = 0; i < )
+// }

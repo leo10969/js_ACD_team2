@@ -18,7 +18,7 @@
 .splide__slide .thumbnail_canvas{
   object-fit: cover;
   text-align: center;
-  transform: translate(-50%) scale(0.15);
+  transform: translate(-30%) scale(0.15);
 }
 .splide__slide .name{
   text-align: center;
