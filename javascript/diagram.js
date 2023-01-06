@@ -1,4 +1,5 @@
 import {arrow} from "./arrow.js";
+import { main } from "./myslider.js";
 
 // Class
 class GroupDict {
@@ -483,15 +484,14 @@ export class GraphList_thumbnail {
 }
 
 export class Changes{
-    static newNodes = [];
+    newNodes = [];
     static gList = GraphList.getGraphList();
     static preNodes = this.gList[0];
     static curNodes = this.gList[0];
 
     static getNodes(){
-        
-        // var pre_id = ;
-        // var id = 
+        var pre_id = main.getIndex(true);
+        var id = main.getIndex();
         this.preNodes = this.gList[pre_id];
         this.curNodes = this.gList[id];
         return id;

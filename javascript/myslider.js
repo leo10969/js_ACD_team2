@@ -1,5 +1,6 @@
+  export var main;
     document.addEventListener('DOMContentLoaded', function () {
-      var main = new Splide('#main-carousel', {
+      main = new Splide('#main-carousel', {
         type: 'fade',
         rewind: true,
         pagination: false,
