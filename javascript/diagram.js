@@ -239,6 +239,8 @@ class Graph {
     nodes = {};
     #cvs;
     isCulculatingForce = true;
+    #iteration = 0;
+    #iterations = 100;
 
     // methods
     constructor(cvs) {
@@ -255,8 +257,8 @@ class Graph {
         for (var i = 0;  i < numOfNodes; i++) {
             var node = nodeList[i];
             var theta = 2 * Math.PI * i / numOfNodes;
-            node.x = 500 + 350*Math.cos(theta);
-            node.y = 350 + 350*Math.sin(theta);
+            node.x = 0.5 + 0.5*Math.cos(theta);
+            node.y = 0.5 + 0.5*Math.sin(theta);
         }
     }
 
@@ -275,38 +277,6 @@ class Graph {
         this.links[from_node_name][to_node_name] = link;
         if (isBidirectional) {
             this.links[to_node_name][from_node_name] = link;
-        }
-    }
-
-
-    //Nodeにかかるばねの力を計算する
-    calcSpringForce(node1, node2) {   
-        var k = 0.001; // ばね定数
-        var stableDistance = 220; // 自然長
-        var dx = node1.x - node2.x;
-        var dy = node1.y - node2.y;
-        var distance = Math.sqrt(dx * dx + dy * dy); 
-        node1.x += k * dx * (stableDistance - distance);
-        node1.y += k * dy * (stableDistance - distance);
-    }
-
-    //Nodeの引力を計算する
-    calcAttractiveForce(node1, node2) {
-        var dx = (node1.x - node2.x);
-        var dy = (node1.y - node2.y);
-        var distance = Math.sqrt(dx * dx + dy * dy) / 10000;
-        node2.x += dx * distance;
-        node2.y += dy * distance;
-    }
-        
-    //Node同士の斥力分だけ移動させる
-    calcRepulsiveForce(node1, node2) {   
-        var dx = node1.x - node2.x;
-        var dy = node1.y - node2.y;
-        var distance = Math.sqrt(dx * dx + dy * dy)/2; 
-        if (distance < node1.r + node2.r){
-            node1.x += dx / distance;
-            node1.y += dy / distance;
         }
     }
 
@@ -331,39 +301,128 @@ class Graph {
         }
         return isout;
     }
+
     calcForce() {
         if (this.isCulculatingForce) {
             var nodeList = Object.values(this.nodes); // Nodeオブジェクトの配列
-            var isout = false;
-            for (var i = 0; i < nodeList.length; i++) {
-                var node1 = nodeList[i];
-                //外に出そうな場合はTrueを返す
-                isout = this.wallJudge(node1, isout);
-                if(isout) break;
+            var nnodes = nodeList.length;
+            var width = 1;
+            var height = 1;
+            var area = width*height;
+            var k = Math.sqrt(area / nnodes);
+            var t = Math.pow(0.9, this.#iteration)*width*0.1;
 
-                for (var j = i+1; j < nodeList.length; j++) {
-                    var node2 = nodeList[j];
-                    isout = this.wallJudge(node2, isout);
-                    if(isout) break;
-
-                    if(Math.abs(node1.x-node2.x) < node2.r && Math.abs(node1.y-node2.y) < node2.r){
-                        node2.x = 500*Math.random() + 150;
-                        node2.y = 500*Math.random() + 150;
-                    }
-                    
-                    if(node1.name in this.links[node2.name] || node2.name in this.links[node1.name]) {
-                        // ばねの計算
-                        this.calcSpringForce(node1, node2);
-                        this.calcSpringForce(node2, node1);
-                    }else {
-                        // 斥力・引力の計算
-                        this.calcRepulsiveForce(node1, node2);
-                        this.calcRepulsiveForce(node2, node1);
-                    }
-                    // 変更を他のグラフの同一ノードに同期する
-                    GraphList.update(node1);
-                    GraphList.update(node2);
+            if (this.#iteration == 0) {
+                this.initPos();
+            } else {
+                var maxDist = -1;
+                for (var i = 0; i < nnodes; i++) {
+                    var node1 = nodeList[i];
+                    var x = node1.x;
+                    var y = node1.y;
+                    var dist = Math.sqrt((x-500)*(x-500) + (5/3)*(5/3)*(y-300)*(y-300));
+                    maxDist = Math.max(maxDist, dist);
                 }
+
+                for (var i = 0; i < nnodes; i++) {
+                    var node1 = nodeList[i];
+                    var x = node1.x;
+                    var y = node1.y;
+                    node1.x = width/2 + (width/2-0.1) / maxDist * (node1.x - 500);
+                    node1.y = height/2 + (height/2-0.1) / maxDist * (5/3) *(node1.y - 300);
+                }
+            }
+            function attractiveForce(x) {return x*x / k;}
+            function repulsiveForce(x) {return k*k / x;}
+            if (this.#iteration < this.#iterations) {
+                for (var i = 0; i < nnodes; i++) {
+                    var node1 = nodeList[i];
+                    node1.dx = 0;
+                    node1.dy = 0;
+                    for (var j = 0; j < nnodes; j++) {
+                        var node2 = nodeList[j];
+                        if (i != j) {
+                            var dx = node1.x - node2.x;
+                            var dy = node1.y - node2.y;
+                            var delta = Math.sqrt(dx*dx + dy*dy);
+                            if (delta != 0) {
+                                var d = repulsiveForce(delta) / delta;
+                                node1.dx += dx * d;
+                                node1.dy += dy * d;
+                            }
+                        }
+                    }
+                }
+
+                for (var i = 0; i < nnodes; i++) {
+                    var node1 = nodeList[i];
+                    for (var j = 0; j < nnodes; j++) {
+                        var node2 = nodeList[j];
+                        if (node1.name in this.links[node2.name] && node2.name in this.links[node1.name]) {
+                            var dx = node1.x - node2.x;
+                            var dy = node1.y - node2.y;
+                            var delta = Math.sqrt(dx*dx + dy*dy);
+                            if (delta != 0) {
+                                var d = 0.5*attractiveForce(delta) / delta;
+                                var ddx = dx*d;
+                                var ddy = dy*d;
+                                node1.dx -= ddx;
+                                node1.dy -= ddy;
+                                node2.dx += ddx;
+                                node2.dy += ddy;
+                            } 
+                        } else if (node1.name in this.links[node2.name] || node2.name in this.links[node1.name]) {
+                            var dx = node1.x - node2.x;
+                            var dy = node1.y - node2.y;
+                            var delta = Math.sqrt(dx*dx + dy*dy);
+                            if (delta != 0) {
+                                var d = attractiveForce(delta) / delta;
+                                var ddx = dx*d;
+                                var ddy = dy*d;
+                                node1.dx -= ddx;
+                                node1.dy -= ddy;
+                                node2.dx += ddx;
+                                node2.dy += ddy;
+                            } 
+                        }
+                    }
+                }
+
+                for (var i = 0; i < nnodes; i++) {
+                    var vnode = nodeList[i];
+                    var dx = vnode.dx;
+                    var dy = vnode.dy;
+                    var disp = Math.sqrt(dx*dx + dy*dy);
+                    if (disp != 0) {
+                        var d = Math.min(disp, t) / disp;
+                        var x = vnode.x + dx*d;
+                        var y = vnode.y + dy*d;
+                        vnode.x = x;
+                        vnode.y = y;
+                    }
+
+                }
+                this.#iteration += 1;
+            } else {
+                this.isCulculatingForce = false;
+            }
+
+            var maxDist = -1;
+            for (var i = 0; i < nnodes; i++) {
+                var node1 = nodeList[i];
+                var x = node1.x;
+                var y = node1.y;
+                var dist = Math.sqrt((x-width/2)*(x-width/2) + (y-height/2)*(y-height/2));
+                maxDist = Math.max(maxDist, dist);
+            }
+
+            for (var i = 0; i < nnodes; i++) {
+                var node1 = nodeList[i];
+                var x = node1.x;
+                var y = node1.y;
+                node1.x = 500 + 425 / maxDist * (node1.x - width/2);
+                node1.y = 0.6*(500 + 425 / maxDist * (node1.y - height/2));
+                GraphList.update(node1);
             }
         }
     }
