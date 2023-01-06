@@ -1,4 +1,5 @@
 import {arrow} from "./arrow.js";
+import { main } from "./myslider.js";
 
 // Class
 class GroupDict {
