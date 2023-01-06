@@ -422,6 +422,7 @@ class Graph {
                 var y = node1.y;
                 node1.x = 500 + 425 / maxDist * (node1.x - width/2);
                 node1.y = 0.6*(500 + 425 / maxDist * (node1.y - height/2));
+                this.wallJudge(node1, false);
                 GraphList.update(node1);
             }
         }
