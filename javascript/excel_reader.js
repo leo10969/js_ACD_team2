@@ -155,7 +155,8 @@ function pushToGraphList(name, content) {
     graph.addLink(linknamelists[k], linkfromlists[k], linktolist[k], linkdirectionlists[k]);
     graph_thumbnail.addLink(linknamelists[k], linkfromlists[k], linktolist[k], linkdirectionlists[k]);
   }
-
+  graph.setEvents();
+  console.log(graph);
   GraphList.graphAt(i).initPos();
   GraphList_thumbnail.graphAt(i).initPos();
   var timer = setInterval(function(){

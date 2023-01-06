@@ -57,7 +57,8 @@ export function arrow(startX, startY, endX, endY, controlPoints){
         // Draw the label on ctx.
         ctx.fillStyle = "black";
         ctx.textBaseline = "middle";
-        ctx.fillText(this.label, (this.startX + this.endX)/2 - ctx.measureText("To").width/2, (this.startY + this.endY)/2)
+        var width = ctx.measureText(this.label).width;
+        ctx.fillText(this.label, (this.startX + this.endX)/2 - width/2, (this.startY + this.endY)/2)
         ctx.restore();
     }
 }

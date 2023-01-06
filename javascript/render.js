@@ -12,8 +12,6 @@ export function render(ctx, graph) {
     graph.drawNodes(ctx);
 }
 
-/*
-for (var i = 0; i < 6; i++){
-    setInterval(render, 30, ctxlist[i], GraphList.graphAt(i));
-}
-*/
+// export function renderThumnail(ctx, graph){
+
+// }

@@ -72,7 +72,7 @@ class Node {
     y = 0;
     r = 50;
     #cvs;
-    #isDragged = false;
+    isDragged = false;
     // methods
     constructor(name, group=[], rank=1) {
         this.name = name;
@@ -80,7 +80,7 @@ class Node {
         this.rank = rank;
         this.x = 500*Math.random() + 150;
         this.y = 500*Math.random() + 150;
-        this.r = 50+(5*this.rank);
+        this.r = 50+(4*this.rank);
     }
 
     setGroup(groupNameList) {
@@ -101,29 +101,6 @@ class Node {
         }
     }
 
-    set cvs(cvs) {
-        // addEventListenerに追加する関数内でthisを使うとfunctionのほうを参照するのでsetter関数内で使えるselfを用意
-        var self = this; 
-        self.#cvs = cvs;
-        cvs.addEventListener("mousedown", function(e) {
-            var dx = self.x - (e.clientX - cvs.getBoundingClientRect().left);
-            var dy = self.y - (e.clientY - cvs.getBoundingClientRect().top);
-            self.#isDragged = Math.sqrt(dx * dx + dy * dy) < self.r;
-        });
-
-        cvs.addEventListener("mousemove", function(e) {
-            if (self.#isDragged) {
-                self.x = e.clientX - cvs.getBoundingClientRect().left;
-                self.y = e.clientY - cvs.getBoundingClientRect().top;
-                GraphList.update(self); // 変更を他のグラフの同一ノードに同期する
-            }
-        });
-
-        cvs.addEventListener("mouseup", function() {
-            self.#isDragged = false;
-        });
-    }
-
     draw(ctx) {
         for (var i = 0; i < this.group.length; i++) {
             var theta1 = 3*Math.PI/2 + 2 * Math.PI * i / this.group.length;
@@ -142,6 +119,7 @@ class Node {
         ctx.beginPath();
         ctx.fillStyle = "white";
         ctx.textBaseline = "middle";
+        ctx.font = "bold 10pt Arial";
         ctx.fillText(this.name, this.x-ctx.measureText(this.name).width/2, this.y);
         ctx.fill();
     };
@@ -462,6 +440,40 @@ class Graph {
                 }
             }
         }
+    }
+
+    setEvents() {
+        // addEventListenerに追加する関数内でthisを使うとfunctionのほうを参照するのでsetter関数内で使えるselfを用意
+        var self = this; 
+        var cvs = this.#cvs;
+        var vlist = Object.values(self.nodes);
+        cvs.addEventListener("mousedown", function(e) {
+            for(var i = vlist.length-1; i >= 0; i--){
+                var n = vlist[i];
+                var dx = n.x - (e.clientX - cvs.getBoundingClientRect().left);
+                var dy = n.y - (e.clientY - cvs.getBoundingClientRect().top);
+                n.isDragged = Math.sqrt(dx * dx + dy * dy) < n.r;
+                if(n.isDragged == true) break;
+            }
+        });
+
+        cvs.addEventListener("mousemove", function(e) {
+            for(var i = vlist.length-1; i >= 0; i--){
+                var n = vlist[i];
+                if (n.isDragged) {
+                    n.x = e.clientX - cvs.getBoundingClientRect().left;
+                    n.y = e.clientY - cvs.getBoundingClientRect().top;
+                    GraphList.update(n); // 変更を他のグラフの同一ノードに同期する
+                }
+            }
+        });
+
+        cvs.addEventListener("mouseup", function() {
+            for(var i = vlist.length-1; i >= 0; i--){
+                var n = vlist[i];
+                n.isDragged = false;
+            }
+        });
     }
 }
 
