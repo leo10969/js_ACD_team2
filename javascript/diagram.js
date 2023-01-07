@@ -519,44 +519,6 @@ export class GraphList {
     }
 }
 
-export class GraphList_thumbnail {
-    // graphと描画されるキャンバスを管理するクラス
-    // graphはキャンバスのIDを使ってキャンバスにアクセスする
-    static #graphList_thumbnail = [];
-    static #cvsList_thumbnail = [];
-
-    static createGraph(cvs) {
-        var graph_thumbnail = new Graph(cvs);
-        this.#graphList_thumbnail.push(graph_thumbnail);
-        this.#cvsList_thumbnail.push(cvs);
-        return graph_thumbnail;
-    }
-
-    static pushGraph(graph_thumbnail) {
-        this.#graphList_thumbnail.push(graph_thumbnail);
-        this.#cvsList_thumbnail.push(graph_thumbnail.cvs);
-    }
-
-    static graphAt(i) {
-        return this.#graphList_thumbnail[i];
-    }
-
-    static canvasAt(i) {
-        return this.#cvsList_thumbnail[i];
-    }
-
-    static update(node) {
-        for (var i = 0; i < this.#graphList_thumbnail.length; i++) {
-            var graph_thumbnail = this.graphAt(i);
-            if (node.name in graph_thumbnail.nodes) {
-                var target = graph_thumbnail.nodes[node.name];
-                target.y = node.y;
-                target.x = node.x;
-            }
-        }
-    }
-}
-
 // export class Changes{
 //     newNodes = [];
 //     static gList = GraphList.getGraphList();
