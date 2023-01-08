@@ -1,4 +1,5 @@
 export var main;
+export var thumbnails;
     document.addEventListener('DOMContentLoaded', function () {
       main = new Splide('#main-carousel', {
         type: 'fade',
@@ -12,7 +13,7 @@ export var main;
       });
 
 
-      var thumbnails = new Splide('#thumbnail-carousel', {
+      thumbnails = new Splide('#thumbnail-carousel', {
         fixedWidth: 200, //スライドの幅自体を固定
         fixedHeight: 60,
         gap: 10, //スライド間の余白を指定

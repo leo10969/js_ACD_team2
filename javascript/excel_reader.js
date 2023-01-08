@@ -1,7 +1,8 @@
 import {GraphList} from './diagram.js';
 import {makecanvas} from './canvas.js';
 import {render} from './render.js';
-import {main} from './myslider.js';
+import {main, thumbnails} from './myslider.js';
+
 
 var cvslist = [];
 export var ctxlist = [];
@@ -108,6 +109,7 @@ function addNewSlide(num) {
   var slideNameDiv = document.createElement("div");
   slideNameDiv.className = "name";
   slideNameDiv.id = "name" + num.toString();
+  slideNameDiv.textContent = (num+1).toString();
   var canvasDiv = document.createElement("div");
   canvasDiv.className = "canvas splide__slide__container";
   canvasDiv.id = num.toString();
@@ -115,6 +117,26 @@ function addNewSlide(num) {
   slide.appendChild(canvasDiv);
 
   main.add(slide);
+}
+
+function addNewThumbnail(num){
+  //Add new thumbnail
+  var thumbnailList = document.getElementById("mythumbnail");
+  var thumbnail = document.createElement("li");
+  thumbnail.className = "splide__slide";
+  thumbnail.id = "slide" + num.toString();
+
+  var thumbnailNameDiv = document.createElement("div");
+  thumbnailNameDiv.className = "name";
+  thumbnailNameDiv.id = "name" + (num+24).toString();
+  thumbnailNameDiv.textContent = (num+1).toString();
+  var thumbnailDiv = document.createElement("div");
+  thumbnailDiv.className = "thumbnail_canvas splide__slide__container";
+  thumbnailDiv.id = (num+24).toString();
+  thumbnail.appendChild(thumbnailNameDiv);
+  thumbnail.appendChild(thumbnailDiv);
+
+  thumbnails.add(thumbnail);
 }
 
 function pushToGraphList(content) {
@@ -152,7 +174,7 @@ function pushToGraphList(content) {
   cvslist.push(ret[0]);
   ctxlist.push(ret[1]);
 
-  var j = i + 11;
+  var j = i + 24;
   var ret_tumbnail = makecanvas(j.toString());
   cvslist_thumbnail.push(ret_tumbnail[0]);
   ctxlist_thumbnail.push(ret_tumbnail[1]);
@@ -187,6 +209,7 @@ document.getElementById('import-excel').addEventListener('change', function (evt
   for (i = 0; i != files.length; ++i) {
     var er = new ExcelJs.Reader(files[i], function (e, xlsx) {
       addNewSlide(count);
+      addNewThumbnail(count);
       pushToGraphList(xlsx.toJson());
       count++;
     });
