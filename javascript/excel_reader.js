@@ -155,6 +155,7 @@ function pushToGraphList(num, content) {
   }
   graph.setEvents();
   GraphList.graphAt(i).initPos();
+  console.log(ctxlist[i]);
   var timer = setInterval(function(){
     render(ctxlist[i], GraphList.graphAt(i));
     render(ctxlist_thumbnail[i], GraphList.graphAt(i));
