@@ -1,4 +1,4 @@
-import {GraphList, GraphList_thumbnail} from './diagram.js';
+import {GraphList, GraphList_thumbnail, Changes} from './diagram.js';
 import {makecanvas} from './canvas.js';
 import {render} from './render.js';
 
@@ -159,11 +159,13 @@ function pushToGraphList(name, content) {
   // console.log(Changes.getNodes());
   GraphList.graphAt(i).initPos();
   GraphList_thumbnail.graphAt(i).initPos();
-  var timer = setInterval(function(){
-    render(ctxlist[i], GraphList.graphAt(i));
+  var timer = setInterval(function() {
+    if (Changes.occursAtIndex(i)) {
+      Changes.getNodes();
+    }
+    render(ctxlist[i], GraphList.graphAt(i), (Changes.id == i));
     render(ctxlist_thumbnail[i], GraphList_thumbnail.graphAt(i));
   }, 100);
-  timer;
   // // 20秒後にタイマーを止める
   // setTimeout(function(){clearInterval(timer);}, 20000);
   // // 20秒後に力の計算を止める
@@ -171,7 +173,6 @@ function pushToGraphList(name, content) {
   //  graph.isCulculatingForce = false;
   // }, 20000);
 }
-
 
 document.getElementById('import-excel').addEventListener('change', function (evt) {
   var files = evt.target.files;

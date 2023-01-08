@@ -125,6 +125,16 @@ class Node {
         ctx.fill();
     };
 
+    highlight(ctx) {
+        // Highlight
+        ctx.beginPath();
+        ctx.arc(this.x, this.y, this.r + 5, 0, 2*Math.PI, false);
+        ctx.fillStyle = "black";
+        ctx.fill();
+        // Draw
+        this.draw(ctx);
+    };
+
     draw_deleted(ctx){
         ctx.globalAlpha = 0.3;
         ctx.fillStyle = "gray";
@@ -557,27 +567,44 @@ export class GraphList_thumbnail {
     }
 }
 
-// export class Changes{
-//     newNodes = [];
-//     static gList = GraphList.getGraphList();
-//     static preNodes = this.gList[0];
-//     static curNodes = this.gList[0];
+export class Changes{
+    static newNodes = [];
+    static gList = GraphList.getGraphList();
+    static pre_id = 0;
+    static id = 0;
+    static preNodes;
+    static curNodes;
 
-//     static getNodes(){
-//         var pre_id = main.getIndex(true);
-//         var id = main.getIndex();
-//         this.preNodes = this.gList[pre_id];
-//         this.curNodes = this.gList[id];
-//         return id;
-//     }
+    // グラフの遷移が起こったかどうかと, 遷移先のグラフのIDがidかどうかをチェックする
+    static occursAtIndex(id) {
+        return this.id != main.index && main.index == id;
+    }
 
-//     // 追加ノードを探して，newNodeに入れる
-//     static searchNewNodes(){
-//         for(var i = 0; i < this.curNodes.length; i++){
-//             if(this.curNodes[i] in this.preNodes){
-//             }else{
-//                 newNodes.push(this.curNodes[i]);
-//             }
-//         }
-//     }
-// }
+
+    static getNodes(){
+        this.gList = GraphList.getGraphList();
+        this.pre_id = this.id;
+        this.id = main.index;
+        this.preNodes = GraphList.graphAt(this.pre_id).nodes;
+        this.curNodes = GraphList.graphAt(this.id).nodes;
+        this.searchNewNodes();
+        return this.newNodes;
+    }
+
+    // 追加ノードを探して，newNodeに入れる
+    static searchNewNodes(){
+        this.newNodes = [];
+        var curNodesObjects = Object.values(this.curNodes);
+        for(var i = 0; i < curNodesObjects.length; i++){
+            if(!(curNodesObjects[i].name in this.preNodes)){
+                this.newNodes.push(curNodesObjects[i]);
+            }
+        }
+    }
+
+    static highlightNewNodes(ctx) {
+        for (var i = 0; i < this.newNodes.length; i++) {
+            this.newNodes[i].highlight(ctx);
+        }
+    }
+}
