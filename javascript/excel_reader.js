@@ -1,6 +1,7 @@
 import {GraphList} from './diagram.js';
 import {makecanvas} from './canvas.js';
 import {render} from './render.js';
+import {main} from './myslider.js';
 
 var cvslist = [];
 export var ctxlist = [];
@@ -97,15 +98,26 @@ function handleCodePoints(array) {
   return result;
 }
 
-function pushToGraphList(num, content) {
+function addNewSlide(num) {
   //Add new slide
-  var elem = document.getElementById("myslider");
-  elem.insertAdjacentHTML("beforeend", "<li class=\"splide__slide\" id=\"slides"+ (num-1).toString() + "\"></li>\n");
+  var slideList = document.getElementById("myslider");
+  var slide = document.createElement("li");
+  slide.className = "splide__slide";
+  slide.id = "slide" + num.toString();
 
-  var elem2 = document.getElementById("slides"+ (num-1).toString());
-  elem2.insertAdjacentHTML("beforeend", "  <div class=\"name\" id=\"name" + (num-1).toString() + "\">" + num.toString() + "</div>\n");
-  elem2.insertAdjacentHTML("beforeend", "  <div class=\"canvas\" id=\"" + (num-1).toString() + "\"></div>\n");
+  var slideNameDiv = document.createElement("div");
+  slideNameDiv.className = "name";
+  slideNameDiv.id = "name" + num.toString();
+  var canvasDiv = document.createElement("div");
+  canvasDiv.className = "canvas splide__slide__container";
+  canvasDiv.id = num.toString();
+  slide.appendChild(slideNameDiv);
+  slide.appendChild(canvasDiv);
 
+  main.add(slide);
+}
+
+function pushToGraphList(content) {
   var namelist = [];
   var grouplist = [];
   var ranklist = [];
@@ -155,12 +167,10 @@ function pushToGraphList(num, content) {
   }
   graph.setEvents();
   GraphList.graphAt(i).initPos();
-  console.log(ctxlist[i]);
   var timer = setInterval(function(){
     render(ctxlist[i], GraphList.graphAt(i));
     render(ctxlist_thumbnail[i], GraphList.graphAt(i));
   }, 100);
-  timer;
   // // 20秒後にタイマーを止める
   // setTimeout(function(){clearInterval(timer);}, 20000);
   // // 20秒後に力の計算を止める
@@ -169,15 +179,15 @@ function pushToGraphList(num, content) {
   // }, 20000);
 }
 
-var count = 1;
+var count = 0;
 
 document.getElementById('import-excel').addEventListener('change', function (evt) {
   var files = evt.target.files;
   var i;
-  console.log(files);
   for (i = 0; i != files.length; ++i) {
     var er = new ExcelJs.Reader(files[i], function (e, xlsx) {
-      pushToGraphList(count, xlsx.toJson());
+      addNewSlide(count);
+      pushToGraphList(xlsx.toJson());
       count++;
     });
   }
