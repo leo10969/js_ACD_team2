@@ -1,0 +1,9 @@
+html += "<li class=\"splide__slide\">\n"
+  html += "  <div class=\"name\" id=\"name" + num.toString() + "\">" + (num+1).toString() + "</div>\n";
+  html += "  <div class=\"canvas\" id=\"" + num.toString() + "\"></div>\n";
+  html += "</li>\n";
+
+  elem.insertAdjacentHTML("beforeend", "<li class=\"splide__slide\">\n");
+  elem.insertAdjacentHTML("beforeend", "  <div class=\"name\" id=\"name" + num.toString() + "\">" + (num+1).toString() + "</div>\n");
+  elem.insertAdjacentHTML("beforeend", "  <div class=\"canvas\" id=\"" + num.toString() + "\"></div>\n");
+  elem.insertAdjacentHTML("beforeend", "</li>\n");

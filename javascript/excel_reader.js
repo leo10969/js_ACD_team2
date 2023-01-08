@@ -97,14 +97,15 @@ function handleCodePoints(array) {
   return result;
 }
 
-function pushToGraphList(name, content) {
-  //FileName
-  /* var elem = document.getElementById('file_name');
-  var html = elem.innerHTML;
-  html = "<h2>" + name.slice(0, name.length-5) +  " is uploaded! </h2>";
-  elem.innerHTML = html; */
+function pushToGraphList(num, content) {
+  //Add new slide
+  var elem = document.getElementById("myslider");
+  elem.insertAdjacentHTML("beforeend", "<li class=\"splide__slide\" id=\"slides"+ (num-1).toString() + "\"></li>\n");
 
-  // Nodes
+  var elem2 = document.getElementById("slides"+ (num-1).toString());
+  elem2.insertAdjacentHTML("beforeend", "  <div class=\"name\" id=\"name" + (num-1).toString() + "\">" + num.toString() + "</div>\n");
+  elem2.insertAdjacentHTML("beforeend", "  <div class=\"canvas\" id=\"" + (num-1).toString() + "\"></div>\n");
+
   var namelist = [];
   var grouplist = [];
   var ranklist = [];
@@ -172,13 +173,16 @@ function pushToGraphList(name, content) {
   // }, 20000);
 }
 
+var count = 1;
 
 document.getElementById('import-excel').addEventListener('change', function (evt) {
   var files = evt.target.files;
-  var i, f;
-  for (i = 0, f = files[i]; i != files.length; ++i) {
-    var er = new ExcelJs.Reader(f, function (e, xlsx) {
-      pushToGraphList(xlsx.getFile().name, xlsx.toJson());
+  var i;
+  console.log(files);
+  for (i = 0; i != files.length; ++i) {
+    var er = new ExcelJs.Reader(files[i], function (e, xlsx) {
+      pushToGraphList(count, xlsx.toJson());
+      count++;
     });
   }
 }, false);

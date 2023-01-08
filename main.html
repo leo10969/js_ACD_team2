@@ -28,54 +28,10 @@
 
 <body>
   <!-- Main Splide -->
-  <!-- <div class="myslide__name", id="file_name"></div> -->
   <section id="main-carousel" class="splide">
     <div class="splide__track">
-      <ul class="splide__list">
-        <li class="splide__slide">
-          <div class="name" id="name0">1</div>
-          <div class="canvas" id="0"></div>
-        </li>
-        <li class="splide__slide">
-          <div class="name" id="name1">2</div>
-          <div class="canvas" id="1"></div>
-        </li>  
-        <li class="splide__slide">
-          <div class="name" id="name2">3</div>
-          <div class="canvas" id="2"></div>
-        </li>
-        <li class="splide__slide">
-          <div class="name" id="name3">4</div>
-          <div class="canvas" id="3"></div>
-        </li>
-        <li class="splide__slide">
-          <div class="name" id="name4">5</div>
-          <div class="canvas" id="4"></div>
-        </li>
-        <li class="splide__slide">
-          <div class="name" id="name5">6</div>
-          <div class="canvas" id="5"></div>
-        </li>
-        <li class="splide__slide">
-          <div class="name" id="name6">7</div>
-          <div class="canvas" id="6"></div>
-        </li>
-        <li class="splide__slide">
-          <div class="name" id="name7">8</div>
-          <div class="canvas" id="7"></div>
-        </li>
-        <li class="splide__slide">
-          <div class="name" id="name8">9</div>
-          <div class="canvas" id="8"></div>
-        </li>
-        <li class="splide__slide">
-          <div class="name" id="name9">10</div>
-          <div class="canvas" id="9"></div>
-        </li>
-        <li class="splide__slide">
-          <div class="name" id="name10">11</div>
-          <div class="canvas" id="10"></div>
-        </li>
+      <ul class="splide__list" id="myslider">
+        
       </ul>
     </div>
     <div class="splide__progress">
@@ -88,7 +44,7 @@
     </button>
   </section>
   <form action="" method="get">
-    <input type="file" name="upload_file" id="import-excel" />
+    <input type="file" name="upload_file" id="import-excel" multiple accept=".xlsx,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"/>
     <div id="result"></div>
   </form>
   
