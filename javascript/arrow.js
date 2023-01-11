@@ -55,11 +55,17 @@ export function arrow(startX, startY, endX, endY, controlPoints){
         ctx.closePath();
 
         // Draw the label on ctx.
+        ctx.beginPath();
         ctx.fillStyle = "black";
         ctx.textBaseline = "middle";
         ctx.font = "10pt Arial";
         var width = ctx.measureText(this.label).width;
+        ctx.fillRect((this.startX + this.endX)/2 - width/2, (this.startY + this.endY)/2 - 8, width, 15);
+        ctx.fill();
+        ctx.fillStyle = "white";
         ctx.fillText(this.label, (this.startX + this.endX)/2 - width/2, (this.startY + this.endY)/2)
+        ctx.fill();
+        ctx.closePath();
         ctx.restore();
     }
 }

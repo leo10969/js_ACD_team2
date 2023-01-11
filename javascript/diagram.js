@@ -118,9 +118,12 @@ class Node {
         ctx.stroke();
 
         ctx.beginPath();
-        ctx.fillStyle = "white";
+        ctx.fillStyle = "black";
         ctx.textBaseline = "middle";
         ctx.font = "bold 10pt Arial";
+        ctx.fillRect(this.x-ctx.measureText(this.name).width/2, this.y-9, ctx.measureText(this.name).width+2, 15);
+        ctx.fill();
+        ctx.fillStyle = "white";
         ctx.fillText(this.name, this.x-ctx.measureText(this.name).width/2, this.y);
         ctx.fill();
     };
