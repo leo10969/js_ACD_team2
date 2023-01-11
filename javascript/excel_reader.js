@@ -1,6 +1,7 @@
-import {GraphList, GraphList_thumbnail, Changes} from './diagram.js';
+import {GraphList, Changes} from './diagram.js';
 import {makecanvas} from './canvas.js';
 import {render} from './render.js';
+import {main, thumbnails} from './myslider.js';
 
 var cvslist = [];
 export var ctxlist = [];
@@ -97,14 +98,47 @@ function handleCodePoints(array) {
   return result;
 }
 
-function pushToGraphList(name, content) {
-  //FileName
-  /* var elem = document.getElementById('file_name');
-  var html = elem.innerHTML;
-  html = "<h2>" + name.slice(0, name.length-5) +  " is uploaded! </h2>";
-  elem.innerHTML = html; */
+function addNewSlide(num) {
+  //Add new slide
+  var slideList = document.getElementById("myslider");
+  var slide = document.createElement("li");
+  slide.className = "splide__slide";
+  slide.id = "slide" + num.toString();
 
-  // Nodes
+  var slideNameDiv = document.createElement("div");
+  slideNameDiv.className = "name";
+  slideNameDiv.id = "name" + num.toString();
+  var canvasDiv = document.createElement("div");
+  canvasDiv.className = "canvas splide__slide__container";
+  canvasDiv.id = num.toString();
+  slide.appendChild(slideNameDiv);
+  slide.appendChild(canvasDiv);
+
+  main.add(slide);
+}
+
+function addNewThumbnail(num){
+  //Add new thumbnail
+  var thumbnailList = document.getElementById("mythumbnail");
+  var thumbnail = document.createElement("li");
+  thumbnail.className = "splide__slide";
+  thumbnail.id = "slide" + num.toString();
+
+  var thumbnailNameDiv = document.createElement("div");
+  thumbnailNameDiv.className = "name";
+  thumbnailNameDiv.id = "name" + (num+24).toString();
+  thumbnailNameDiv.textContent = (num+1).toString();
+  var thumbnailDiv = document.createElement("div");
+  thumbnailDiv.className = "thumbnail_canvas splide__slide__container";
+  thumbnailDiv.id = (num+24).toString();
+  thumbnail.appendChild(thumbnailNameDiv);
+  thumbnail.appendChild(thumbnailDiv);
+
+  thumbnails.add(thumbnail);
+}
+
+
+function pushToGraphList(content) {
   var namelist = [];
   var grouplist = [];
   var ranklist = [];
@@ -139,32 +173,27 @@ function pushToGraphList(name, content) {
   cvslist.push(ret[0]);
   ctxlist.push(ret[1]);
 
-  var j = i + 11;
+  var j = i + 24;
   var ret_tumbnail = makecanvas(j.toString());
   cvslist_thumbnail.push(ret_tumbnail[0]);
   ctxlist_thumbnail.push(ret_tumbnail[1]);
   
   var graph = GraphList.createGraph(cvslist[i]);
-  var graph_thumbnail = GraphList_thumbnail.createGraph(cvslist_thumbnail[i]);
   for (var k =0; k < namelist.length; k++){
     graph.addNode(namelist[k], grouplist[k], ranklist[k]);
-    graph_thumbnail.addNode(namelist[k], grouplist[k], ranklist[k]);
   }
 
   for (var k = 0; k < linkfromlists.length; k++){
     graph.addLink(linknamelists[k], linkfromlists[k], linktolist[k], linkdirectionlists[k]);
-    graph_thumbnail.addLink(linknamelists[k], linkfromlists[k], linktolist[k], linkdirectionlists[k]);
   }
   graph.setEvents();
-  // console.log(Changes.getNodes());
   GraphList.graphAt(i).initPos();
-  GraphList_thumbnail.graphAt(i).initPos();
   var timer = setInterval(function() {
     if (Changes.occursAtIndex(i)) {
       Changes.getNewParts();
     }
     render(ctxlist[i], GraphList.graphAt(i), (Changes.id == i));
-    render(ctxlist_thumbnail[i], GraphList_thumbnail.graphAt(i));
+    render(ctxlist_thumbnail[i], GraphList.graphAt(i));
   }, 100);
   // // 20秒後にタイマーを止める
   // setTimeout(function(){clearInterval(timer);}, 20000);
@@ -174,12 +203,17 @@ function pushToGraphList(name, content) {
   // }, 20000);
 }
 
+var count = 0;
+
 document.getElementById('import-excel').addEventListener('change', function (evt) {
   var files = evt.target.files;
-  var i, f;
-  for (i = 0, f = files[i]; i != files.length; ++i) {
-    var er = new ExcelJs.Reader(f, function (e, xlsx) {
-      pushToGraphList(xlsx.getFile().name, xlsx.toJson());
+  var i;
+  for (i = 0; i != files.length; ++i) {
+    var er = new ExcelJs.Reader(files[i], function (e, xlsx) {
+      addNewSlide(count);
+      addNewThumbnail(count);
+      pushToGraphList(xlsx.toJson());      
+      count++;
     });
   }
 }, false);
