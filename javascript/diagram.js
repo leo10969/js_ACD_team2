@@ -3,7 +3,8 @@ import { main } from "./myslider.js";
 
 // Class
 class GroupDict {
-    // porperty
+    // 30色までに限定
+    // property
     groupDict = {}; // private変数にすべきか？
     static #sigletonInstance = null;
     #colorPool = [];
@@ -90,7 +91,7 @@ class Node {
         this.rank = rank;
         this.x = 500*Math.random() + 150;
         this.y = 500*Math.random() + 150;
-        this.r = 50+(4*this.rank);
+        this.r = 40+(5*this.rank);
     }
 
     setGroup(groupNameList) {
