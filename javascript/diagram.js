@@ -6,7 +6,8 @@ class GroupDict {
     // porperty
     groupDict = {}; // private変数にすべきか？
     static #sigletonInstance = null;
-    #numOfPop = 0;
+    #colorPool = [];
+    #isInitialState = true;
     // methods
     static getInstance() {
         if (this.#sigletonInstance == null) {
@@ -15,27 +16,34 @@ class GroupDict {
         return this.#sigletonInstance;
     }
 
+    makeColorPool() {
+        for (var i = 0; i < 6; i++) {
+            for (var j = 0; j < 4; j++) {
+                if (i % 4 == 0) {
+                    this.#colorPool.push("hsl(" + (i*10 + 190).toString() + ", 100%, 50%)");
+                } else if (i % 4 == 1) {
+                    this.#colorPool.push("hsl(" + (i*10).toString() + ", 100%, 50%)");
+                } else if (i % 4 == 2) {
+                    this.#colorPool.push("hsl(" + (i*10 + 250).toString() + ", 100%, 50%)");
+                } else {
+                    this.#colorPool.push("hsl(" + (i*10 + 60).toString() + ", 100%, 50%)");
+                }
+            }
+        }
+    }
+
     popColorPool() {
-        this.#numOfPop += 1;
-        var colorType = "";
-        if (this.#numOfPop % 2 == 1) {
-            colorType = "warm";
-        } else {
-            colorType = "cold";
+        if (this.#isInitialState) {
+            this.makeColorPool();
+            this.#isInitialState = false;
         }
 
-        if (colorType == "warm") {
-            if ( this.#numOfPop % 4 == 1) {
-                return "hsl(" + Math.round(50 * Math.random()).toString() + ", 100%, 50%)";
-            } else {
-                return "hsl(" + (Math.round(50 * Math.random()) + 60).toString() + ", 100%, 50%)";
-            }
+        if (this.#colorPool == []) {
+            console.log("ColorPool is empty!");
+            return "black";
         } else {
-            if ( this.#numOfPop % 4 == 0) {
-                return "hsl(" + (Math.round(50 * Math.random()) + 190).toString() + ", 100%, 50%)";
-            } else {
-                return "hsl(" + (Math.round(50 * Math.random()) + 250).toString() + ", 100%, 50%)";
-            }
+            console.log(this.#colorPool);
+            return this.#colorPool.pop();
         }
     }
 
