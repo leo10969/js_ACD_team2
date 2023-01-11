@@ -19,11 +19,11 @@ class GroupDict {
     makeColorPool() {
         for (var i = 0; i < 6; i++) {
             for (var j = 0; j < 4; j++) {
-                if (i % 4 == 0) {
+                if (j % 4 == 0) {
                     this.#colorPool.push("hsl(" + (i*10 + 190).toString() + ", 100%, 50%)");
-                } else if (i % 4 == 1) {
+                } else if (j % 4 == 1) {
                     this.#colorPool.push("hsl(" + (i*10).toString() + ", 100%, 50%)");
-                } else if (i % 4 == 2) {
+                } else if (j % 4 == 2) {
                     this.#colorPool.push("hsl(" + (i*10 + 250).toString() + ", 100%, 50%)");
                 } else {
                     this.#colorPool.push("hsl(" + (i*10 + 60).toString() + ", 100%, 50%)");
@@ -42,8 +42,9 @@ class GroupDict {
             console.log("ColorPool is empty!");
             return "black";
         } else {
+            var color = this.#colorPool.pop();
             console.log(this.#colorPool);
-            return this.#colorPool.pop();
+            return color;
         }
     }
 
