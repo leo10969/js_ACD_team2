@@ -10,6 +10,11 @@ export function render(ctx, graph, isShown=false) {
     // Draw links
     graph.drawLinks(ctx);
 
+    // HighLights Links
+    if (isShown) {
+        Changes.highlightNewLinks(ctx);
+    }
+
     // Draw nodes
     graph.drawNodes(ctx);
 

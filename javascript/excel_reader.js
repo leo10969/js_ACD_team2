@@ -161,7 +161,7 @@ function pushToGraphList(name, content) {
   GraphList_thumbnail.graphAt(i).initPos();
   var timer = setInterval(function() {
     if (Changes.occursAtIndex(i)) {
-      Changes.getNodes();
+      Changes.getNewParts();
     }
     render(ctxlist[i], GraphList.graphAt(i), (Changes.id == i));
     render(ctxlist_thumbnail[i], GraphList_thumbnail.graphAt(i));

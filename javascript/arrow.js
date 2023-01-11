@@ -40,11 +40,11 @@ export function arrow(startX, startY, endX, endY, controlPoints){
     // Initialized
     this.update(startX, startY, endX, endY, controlPoints);
 
-    this.draw = function(ctx){
+    this.draw = function(ctx, color="gray"){
         ctx.save();
         // Draw the arrow.
         ctx.beginPath();
-        ctx.fillStyle = "gray";
+        ctx.fillStyle = color;
         for (var i = 0; i < a.length; i += 2) {
             var x = a[i] * cos - a[i + 1] * sin + this.startX;
             var y = a[i] * sin + a[i + 1] * cos + this.startY;

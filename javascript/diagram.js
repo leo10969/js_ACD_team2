@@ -200,6 +200,25 @@ class Link {
         this.#arrow.draw(ctx);
     }
 
+    highlight(ctx) {
+        var theta = Math.atan2((this.to_node.y - this.from_node.y), (this.to_node.x - this.from_node.x));
+        var controlPoints = [];
+        if (this.isBidirectional) {
+            controlPoints = [0, 3, -1, 3, -1, 3];
+        } else {
+            controlPoints = [0, 3, -20, 3, -20, 15];
+        }
+
+        this.#arrow.update(
+                this.from_node.x + this.from_node.r * Math.cos(theta), 
+                this.from_node.y + this.from_node.r * Math.sin(theta), 
+                this.to_node.x - this.to_node.r * Math.cos(theta), 
+                this.to_node.y - this.to_node.r * Math.sin(theta), 
+                controlPoints
+        );
+        this.#arrow.draw(ctx, "red");
+    }
+
     draw_deleted(ctx) {
         ctx.globalAlpha = 0.3;
         var theta = Math.atan2((this.to_node.y - this.from_node.y), (this.to_node.x - this.from_node.x));
@@ -569,24 +588,38 @@ export class GraphList_thumbnail {
 
 export class Changes{
     static newNodes = [];
+    static newLinks = {};
     static gList = GraphList.getGraphList();
     static pre_id = 0;
     static id = 0;
     static preNodes;
     static curNodes;
+    static preLinks;
+    static curLinks;
 
     // グラフの遷移が起こったかどうかと, 遷移先のグラフのIDがidかどうかをチェックする
     static occursAtIndex(id) {
         return this.id != main.index && main.index == id;
     }
 
-
-    static getNodes(){
+    static getNewParts() {
         this.gList = GraphList.getGraphList();
         this.pre_id = this.id;
         this.id = main.index;
-        this.preNodes = GraphList.graphAt(this.pre_id).nodes;
-        this.curNodes = GraphList.graphAt(this.id).nodes;
+        this.getLinks();
+        this.getNodes();
+    }
+
+    static getLinks(){
+        this.preLinks = this.gList[this.pre_id].links;
+        this.curLinks = this.gList[this.id].links;
+        this.searchNewLinks();
+        return this.newLinks;
+    }
+
+    static getNodes(){
+        this.preNodes = this.gList[this.pre_id].nodes;
+        this.curNodes = this.gList[this.id].nodes;
         this.searchNewNodes();
         return this.newNodes;
     }
@@ -602,9 +635,68 @@ export class Changes{
         }
     }
 
+    // 追加リンクを探して，newLinkに入れる
+    static searchNewLinks(){
+        this.newLinks = {};
+        var curFromNodeName = Object.keys(this.curLinks);
+        for(var i = 0; i < curFromNodeName.length; i++){
+            if (!(curFromNodeName[i] in this.newLinks)) {
+                this.newLinks[curFromNodeName[i]] = {};
+            }
+            var curToNodeName = Object.keys(this.curLinks[curFromNodeName[i]]);
+            for (var j = 0; j < curToNodeName.length; j++) {
+                if (!(curFromNodeName[i] in this.preLinks && curToNodeName[j] in this.preLinks[curFromNodeName[i]])) {
+                    this.newLinks[curFromNodeName[i]][curToNodeName[j]] = this.curLinks[curFromNodeName[i]][curToNodeName[j]];
+                } else if (this.preLinks[curFromNodeName[i]][curToNodeName[j]].label != this.curLinks[curFromNodeName[i]][curToNodeName[j]].label) {
+                    this.newLinks[curFromNodeName[i]][curToNodeName[j]] = this.curLinks[curFromNodeName[i]][curToNodeName[j]];
+                }
+            }
+        }
+    }
+
     static highlightNewNodes(ctx) {
         for (var i = 0; i < this.newNodes.length; i++) {
             this.newNodes[i].highlight(ctx);
+        }
+    }
+
+    static highlightNewLinks(ctx) {
+        var nodeList = Object.values(this.gList[this.id].nodes); // Nodeオブジェクトの配列
+        for (var i = 0; i < nodeList.length; i++) {
+            var node1 = nodeList[i];
+            for (var j = i+1; j < nodeList.length; j++) {
+                var node2 = nodeList[j];
+                if( (node2.name in this.gList[this.id].links[node1.name] && this.gList[this.id].links[node1.name][node2.name].isBidirectional == false) 
+                    && (node1.name in this.gList[this.id].links[node2.name] && this.gList[this.id].links[node2.name][node1.name].isBidirectional == false) ) {
+                    ctx.save();
+                    if (node1.name in this.newLinks && node2.name in this.newLinks[node1.name]) {
+                        ctx.translate(15*Math.cos(this.newLinks[node1.name][node2.name].theta + Math.PI/2), 
+                                    15*Math.sin(this.newLinks[node1.name][node2.name].theta + Math.PI/2));
+                        this.newLinks[node1.name][node2.name].highlight(ctx);
+                    }
+                    ctx.restore();
+                    ctx.save();
+                    if (node2.name in this.newLinks && node1.name in this.newLinks[node2.name]) {
+                        ctx.translate(15*Math.cos(this.newLinks[node2.name][node1.name].theta + Math.PI/2), 
+                                    15*Math.sin(this.newLinks[node2.name][node1.name].theta + Math.PI/2));
+                        this.newLinks[node2.name][node1.name].highlight(ctx);
+                    }
+                    ctx.restore();
+                } else if ( (node2.name in this.gList[this.id].links[node1.name] && this.gList[this.id].links[node1.name][node2.name].isBidirectional) 
+                    && (node1.name in this.gList[this.id].links[node2.name] && this.gList[this.id].links[node2.name][node1.name].isBidirectional) ) {
+                    if (node1.name in this.newLinks && node2.name in this.newLinks[node1.name]) {
+                        this.newLinks[node1.name][node2.name].highlight(ctx);
+                    }
+                } else if (node2.name in this.gList[this.id].links[node1.name]){
+                    if (node1.name in this.newLinks && node2.name in this.newLinks[node1.name]) {
+                        this.newLinks[node1.name][node2.name].highlight(ctx);
+                    }
+                } else if (node1.name in this.gList[this.id].links[node2.name]){
+                    if (node1.name in this.newLinks && node2.name in this.newLinks[node1.name]) {
+                        this.newLinks[node1.name][node2.name].highlight(ctx);
+                    }
+                }
+            }
         }
     }
 }
