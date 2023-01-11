@@ -7,6 +7,11 @@ export function render(ctx, graph, isShown=false) {
     // Calculate force
     graph.calcForce();
 
+    // HighLights Nodes
+    if (isShown) {
+        Changes.highlightNewNodes(ctx);
+    }
+    
     // Draw links
     graph.drawLinks(ctx);
 
@@ -18,10 +23,7 @@ export function render(ctx, graph, isShown=false) {
     // Draw nodes
     graph.drawNodes(ctx);
 
-    // HighLights Nodes
-    if (isShown) {
-        Changes.highlightNewNodes(ctx);
-    }
+
 }
 
 // export function renderThumnail(ctx, graph){

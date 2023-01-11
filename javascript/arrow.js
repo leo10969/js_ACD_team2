@@ -58,7 +58,7 @@ export function arrow(startX, startY, endX, endY, controlPoints){
         ctx.beginPath();
         ctx.fillStyle = "white";
         ctx.textBaseline = "middle";
-        ctx.font = "10pt Arial";
+        ctx.font = "10pt 游明朝";
         var width = ctx.measureText(this.label).width;
         ctx.fillRect((this.startX + this.endX)/2 - width/2, (this.startY + this.endY)/2 - 8, width, 15);
         ctx.fill();

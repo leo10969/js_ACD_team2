@@ -131,7 +131,7 @@ class Node {
         ctx.beginPath();
         ctx.fillStyle = "black";
         ctx.textBaseline = "middle";
-        ctx.font = "15pt Arial";
+        ctx.font = "15pt 游明朝";
         // ctx.fillRect(this.x-ctx.measureText(this.name).width/2, this.y-9, ctx.measureText(this.name).width+2, 15);
         ctx.fill();
         ctx.fillStyle = "white";
@@ -142,8 +142,8 @@ class Node {
     highlight(ctx) {
         // Highlight
         ctx.beginPath();
-        ctx.arc(this.x, this.y, this.r + 5, 0, 2*Math.PI, false);
-        ctx.fillStyle = "hsl(0, 0%, 40%)";
+        ctx.arc(this.x, this.y, this.r + 20, 0, 2*Math.PI, false);
+        ctx.fillStyle = "hsl(0, 90%, 90%)";
         ctx.fill();
         // Draw
         this.draw(ctx);
