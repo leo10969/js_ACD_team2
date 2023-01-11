@@ -56,13 +56,13 @@ export function arrow(startX, startY, endX, endY, controlPoints){
 
         // Draw the label on ctx.
         ctx.beginPath();
-        ctx.fillStyle = "black";
+        ctx.fillStyle = "white";
         ctx.textBaseline = "middle";
         ctx.font = "10pt Arial";
         var width = ctx.measureText(this.label).width;
         ctx.fillRect((this.startX + this.endX)/2 - width/2, (this.startY + this.endY)/2 - 8, width, 15);
         ctx.fill();
-        ctx.fillStyle = "white";
+        ctx.fillStyle = "black";
         ctx.fillText(this.label, (this.startX + this.endX)/2 - width/2, (this.startY + this.endY)/2)
         ctx.fill();
         ctx.closePath();

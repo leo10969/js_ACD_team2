@@ -22,13 +22,13 @@ class GroupDict {
         for (var i = 0; i < 6; i++) {
             for (var j = 0; j < 4; j++) {
                 if (j % 4 == 0) {
-                    this.#colorPool.push("hsl(" + (i*10 + 190).toString() + ", 100%, 50%)");
+                    this.#colorPool.push("hsl(" + (i*10 + 190).toString() + ", 80%, 60%)");
                 } else if (j % 4 == 1) {
-                    this.#colorPool.push("hsl(" + (i*10).toString() + ", 100%, 50%)");
+                    this.#colorPool.push("hsl(" + (i*10).toString() + ", 80%, 60%)");
                 } else if (j % 4 == 2) {
-                    this.#colorPool.push("hsl(" + (i*10 + 250).toString() + ", 100%, 50%)");
+                    this.#colorPool.push("hsl(" + (i*10 + 250).toString() + ", 80%, 60%)");
                 } else {
-                    this.#colorPool.push("hsl(" + (i*10 + 60).toString() + ", 100%, 50%)");
+                    this.#colorPool.push("hsl(" + (i*10 + 60).toString() + ", 80%, 60%)");
                 }
             }
         }
@@ -124,15 +124,15 @@ class Node {
             ctx.fill();
         }
         ctx.beginPath();
-        ctx.arc(this.x, this.y, this.r, 0, 2*Math.PI, false);
+        // ctx.arc(this.x, this.y, this.r, 0, 2*Math.PI, false);
         ctx.strokeStyle = "black";
         ctx.stroke();
 
         ctx.beginPath();
         ctx.fillStyle = "black";
         ctx.textBaseline = "middle";
-        ctx.font = "bold 15pt Arial";
-        ctx.fillRect(this.x-ctx.measureText(this.name).width/2, this.y-12, ctx.measureText(this.name).width+2, 20);
+        ctx.font = "15pt Arial";
+        // ctx.fillRect(this.x-ctx.measureText(this.name).width/2, this.y-9, ctx.measureText(this.name).width+2, 15);
         ctx.fill();
         ctx.fillStyle = "white";
         ctx.fillText(this.name, this.x-ctx.measureText(this.name).width/2, this.y);
@@ -143,7 +143,7 @@ class Node {
         // Highlight
         ctx.beginPath();
         ctx.arc(this.x, this.y, this.r + 5, 0, 2*Math.PI, false);
-        ctx.fillStyle = "black";
+        ctx.fillStyle = "hsl(0, 0%, 40%)";
         ctx.fill();
         // Draw
         this.draw(ctx);
@@ -230,7 +230,7 @@ class Link {
                 this.to_node.y - this.to_node.r * Math.sin(theta), 
                 controlPoints
         );
-        this.#arrow.draw(ctx, "red");
+        this.#arrow.draw(ctx, "hsl(0, 90%, 70%)");
     }
 
     draw_deleted(ctx) {
