@@ -108,6 +108,7 @@ function addNewSlide(num) {
   var slideNameDiv = document.createElement("div");
   slideNameDiv.className = "name";
   slideNameDiv.id = "name" + num.toString();
+  slideNameDiv.textContent = (num+1).toString();
   var canvasDiv = document.createElement("div");
   canvasDiv.className = "canvas splide__slide__container";
   canvasDiv.id = num.toString();
