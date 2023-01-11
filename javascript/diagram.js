@@ -3,12 +3,13 @@ import { main } from "./myslider.js";
 
 // Class
 class GroupDict {
-    // 30色までに限定
-    // property
+    // 24色までに限定
+    // properties
     groupDict = {}; // private変数にすべきか？
     static #sigletonInstance = null;
     #colorPool = [];
     #isInitialState = true;
+
     // methods
     static getInstance() {
         if (this.#sigletonInstance == null) {
