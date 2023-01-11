@@ -3,7 +3,7 @@ import { main } from "./myslider.js";
 
 // Class
 class GroupDict {
-    // 24色までに限定
+    // 12色までに限定
     // properties
     groupDict = {}; // private変数にすべきか？
     static #sigletonInstance = null;
@@ -19,16 +19,16 @@ class GroupDict {
     }
 
     makeColorPool() {
-        for (var i = 0; i < 6; i++) {
+        for (var i = 0; i < 3; i++) {
             for (var j = 0; j < 4; j++) {
                 if (j % 4 == 0) {
-                    this.#colorPool.push("hsl(" + (i*10 + 190).toString() + ", 80%, 60%)");
+                    this.#colorPool.push("hsl(" + (i*15 + 225).toString() + ", 80%, 60%)");
                 } else if (j % 4 == 1) {
-                    this.#colorPool.push("hsl(" + (i*10).toString() + ", 80%, 60%)");
+                    this.#colorPool.push("hsl(" + (i*15 - 30).toString() + ", 80%, 60%)");
                 } else if (j % 4 == 2) {
-                    this.#colorPool.push("hsl(" + (i*10 + 250).toString() + ", 80%, 60%)");
+                    this.#colorPool.push("hsl(" + (i*15 + 180).toString() + ", 80%, 60%)");
                 } else {
-                    this.#colorPool.push("hsl(" + (i*10 + 60).toString() + ", 80%, 60%)");
+                    this.#colorPool.push("hsl(" + (i*15 + 15).toString() + ", 80%, 60%)");
                 }
             }
         }
