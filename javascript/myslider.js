@@ -24,12 +24,6 @@ export var thumbnails;
         padding: {
           left: '50px',
         },
-        breakpoints: {
-          600: {
-            fixedWidth: 60,
-            fixedHeight: 44,
-          },
-        },
       });
 
 
