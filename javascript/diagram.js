@@ -9,6 +9,7 @@ class GroupDict {
     static #sigletonInstance = null;
     #colorPool = [];
     #isInitialState = true;
+    #onlyOneAlertHappens = false;
 
     // methods
     static getInstance() {
@@ -40,12 +41,14 @@ class GroupDict {
             this.#isInitialState = false;
         }
 
-        if (this.#colorPool == []) {
-            console.log("ColorPool is empty!");
+        if (this.#colorPool.length == 0) {
+            if (! this.#onlyOneAlertHappens) {
+                window.alert("登録できる所属の数は12個までです。12個を超えた所属は黒色で表されます。");
+                this.#onlyOneAlertHappens = true;
+            }
             return "black";
         } else {
             var color = this.#colorPool.pop();
-            console.log(this.#colorPool);
             return color;
         }
     }
@@ -67,7 +70,7 @@ class GroupDict {
 class Group {
     name = "";
     size = 0;
-    color = "#808080";
+    color = "black";
     constructor(name) {
         var groupDict = GroupDict.getInstance();
         this.name = name;
