@@ -22,10 +22,4 @@ export function render(ctx, graph, isShown=false) {
 
     // Draw nodes
     graph.drawNodes(ctx);
-
-
 }
-
-// export function renderThumnail(ctx, graph){
-
-// }
